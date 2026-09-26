@@ -339,6 +339,12 @@
     // Embedded Complete Syllabus Content (9 Comprehensive Chapters)
     const CHAPTERS = [
   {
+    "id": "ch-00",
+    "title": "0. The SQL-to-AI Rosetta Stone (Zero-to-One Foundations)",
+    "summary": "Connecting Relational Schemas, Tables, JOINs & Indexes directly to Tensors, Embeddings & Self-Attention",
+    "markdown": "# CHAPTER 0: The SQL-to-AI Rosetta Stone \u2014 Zero-to-One Foundations for Analysts\n\n## 0.1 Executive Welcome: Your Transformation from Analyst to AI Systems Architect\n\nIf you know how to write a `SELECT` statement, execute a `JOIN`, inspect a query plan, or diagnose a slow index, **you already possess 70% of the cognitive framework needed to master Artificial Intelligence**.\n\nThe AI industry is blanketed in mystical jargon\u2014*\"latent manifolds\", \"attention sinks\", \"tensor contractions\", \"hallucination filters\"*. These terms make deep learning feel like black magic. \n\n**It is not magic. It is data engineering and linear algebra executed at scale.**\n\n```mermaid\nflowchart LR\n    A[\"<b>Where You Are Today:</b><br/>SQL & Data Analyst<br/>\u2022 Relational Schemas<br/>\u2022 JOINs & Aggregations<br/>\u2022 Indexes & Query Plans<br/>\u2022 Prompting ChatGPT as black-box\"]\n    -->|The 10-Chapter Master Curriculum| B[\"<b>Where You Will Stand:</b><br/>Production AI Systems Architect<br/>\u2022 Understand GPU memory physics<br/>\u2022 Build hybrid RAG & stateful agents<br/>\u2022 Sizing VRAM & latency rooflines<br/>\u2022 Auditing production compliance\"]\n\n    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;\n    classDef startNode fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;\n    classDef endNode fill:#065f46,stroke:#10b981,stroke-width:2px,color:#ffffff;\n    class A startNode;\n    class B endNode;\n```\n\n### What You Will Understand After Completing This Handbook:\n1. **The Physical Mechanics:** You will know exactly what happens to a string of text from the moment a user presses enter to the nanosecond a GPU generates the next token.\n2. **Hardware & Economics:** You will be able to calculate the exact VRAM overhead and server costs required to host a model for 50 concurrent users *before* spending a single dollar on cloud compute.\n3. **Retrieval & Agents:** You will build hybrid retrieval systems fusing vector graphs with lexical search, and orchestrate autonomous state graphs with human approval gates.\n4. **Safety & Governance:** You will implement continuous evaluation pipelines (the RAG Triad), adversarial delimiter sandboxes, and documentation compliant with the **EU AI Act**.\n\n---\n\n## 0.2 The SQL-to-AI Rosetta Stone: Universal Concept Translation\n\nEvery major component of a Large Language Model maps directly to a relational database primitive you already use every day:\n\n| Relational Database / SQL Concept | AI & LLM Runtime Equivalent | What Is Physically Happening in Hardware? |\n|---|---|---|\n| **SQL Table** | **2D Matrix / Tensor ($S \\times d$)** | A contiguous memory buffer of rows (tokens) and columns (dimensions). |\n| **Row Primary Key (`id`)** | **Token ID (e.g., `3821`)** | An integer index pointing to a discrete sub-word entry in a vocabulary table. |\n| **Indexed Primary Key Lookup (`SELECT * FROM table WHERE id = X`)** | **Embedding Layer ($W_E$)** | An $O(1)$ memory pointer jump to extract a 4,096-column feature vector from RAM. |\n| **Fuzzy Self-Join (`table A JOIN table B ON similarity`)** | **Self-Attention Mechanism** | Multiplying Query vectors by Transposed Key vectors to compute relational affinity scores. |\n| **`GROUP BY` + `SUM()` Aggregate Function** | **Softmax Normalization & Value Projection ($P \\times V$)** | Normalizing match scores to sum to 1.0 (probabilities) and taking a weighted average of values. |\n| **Fixed Schema Definition (`CREATE TABLE`)** | **Pydantic Data Contracts** | Enforcing strict JSON type safety and regex validation on model inputs and tool outputs. |\n| **Stored Procedure / Database Trigger** | **Agentic Tool Execution** | A deterministic function executed outside the model when a specific state trigger is met. |\n| **Database Read-Replica Pool** | **Inference Engine Cluster (vLLM)** | Read-only serving instances configured for high concurrency without state corruption. |\n| **Query Execution Plan & Buffer Pool** | **Inference Prefill vs. Decode Phase & KV Cache** | Prefill is compute-bound (reading prompt); Decode is memory-bound (loading past KV states). |\n| **`WHERE` Filter & Row-Level Security (RLS)** | **Input/Output Guardrail Gateway** | Intercepting unauthorized prompt injections or sensitive data (SSNs/PII) at system boundaries. |\n| **Unit Test Suite & Data Quality Checks (`dbt test`)** | **The RAG Triad (Evals Suite)** | Automatically verifying Context Relevance, Groundedness (NLI), and Answer Relevance. |\n\n---\n\n## 0.3 The Journey of a Data Row: From Text to Neural Activation\n\nLet us trace how text flows through an AI model using relational SQL terms.\n\n```mermaid\nflowchart TD\n    A[\"Raw String Input:<br/>'Unsettled transaction 4091'\"] --> B[\"1. Tokenizer: Split into discrete keys<br/>['Un', 'settled', ' transaction', ' 40', '91']\"]\n    B --> C[\"2. Vocabulary Index: Map to integer IDs<br/>[3821, 19284, 8219, 1420, 9128]\"]\n    C --> D[\"3. Embedding Table Scan: O(1) row extraction<br/>Extract 4,096 float columns per token from W_E\"]\n    D --> E[\"4. Self-Attention: Continuous Fuzzy Cross-Join<br/>Tokens query and aggregate info from all prior tokens\"]\n    E --> F[\"5. Output Softmax: Probability distribution<br/>Predict highest-likelihood next Token ID in vocabulary\"]\n\n    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;\n    classDef startNode fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;\n    classDef endNode fill:#065f46,stroke:#10b981,stroke-width:2px,color:#ffffff;\n    class A startNode;\n    class F endNode;\n```\n\n### 1. Tokenization is Foreign Key Resolution\nWhen you submit a text string, the computer does not read words or letters. It uses a **Tokenizer**\u2014which is essentially a pre-compiled lookup catalog mapping text fragments to integer primary keys:\n\n```sql\n-- Conceptual SQL equivalent of Tokenization:\nSELECT token_id, token_string \nFROM vocabulary_catalog \nWHERE token_string IN ('Un', 'settled', ' transaction', ' 40', '91');\n-- Returns: [3821, 19284, 8219, 1420, 9128]\n```\n\n### 2. The Embedding Matrix is a Materialized View\nOnce the system has the token IDs, it retrieves their vector representations from the **Embedding Matrix ($W_E$)**. \nAn embedding matrix is simply a table with 128,000 rows (vocabulary size) and 4,096 columns (hidden dimension):\n\n```sql\n-- Conceptual SQL equivalent of Embedding Lookup:\nSELECT col_1, col_2, ..., col_4096 \nFROM embedding_weights_table \nWHERE token_id = 3821;\n```\n\nIn hardware, this is not an expensive join; it is a **single-cycle direct memory pointer offset**:\n$$\\text{Memory Address} = \\text{Base Address} + (\\text{token\\_id} \\times 4096 \\times 2 \\text{ bytes})$$\n\n### 3. Self-Attention is a Continuous, Weighted Self-JOIN\nWhy do we need attention? Because static embeddings cannot distinguish between *\"bank account\"* and *\"river bank\"*.\nSelf-attention takes the token sequence and executes a continuous, fuzzy cross-join where each token queries every preceding token to update its meaning:\n\n```sql\n-- Conceptual SQL equivalent of Self-Attention:\nSELECT \n    q.token_id AS query_token,\n    k.token_id AS key_token,\n    -- Compute alignment score (Query dot Key):\n    (q.vector <#> k.vector) / SQRT(128) AS raw_affinity,\n    v.payload_vector\nFROM prompt_tokens q\nCROSS JOIN prompt_tokens k\nJOIN prompt_tokens v ON k.token_id = v.token_id\nWHERE k.position_index <= q.position_index; -- Causal Masking (cannot look ahead)\n```\n\nThe resulting affinity scores are passed into a Softmax function (which normalizes them so the percentages sum to $100\\%$), and used to compute a weighted average of the value vectors ($V$).\n\n---\n\n## 0.4 Why Traditional SQL Fails on Unstructured Text\n\nAs an analyst, you are accustomed to querying structured tables:\n```sql\nSELECT customer_id, transaction_amount \nFROM transactions \nWHERE status = 'FLAGGED' AND amount > 5000;\n```\nThis query is fast and deterministic because the database engine uses B-Tree indexes on structured columns.\n\n### The Semantic Gap:\nWhat happens when you need to answer:\n> *\"Did the merchant report any unexplained variance in their Q3 dispute reserves?\"*\n\nIn traditional SQL, you would try:\n```sql\nSELECT * FROM document_filings \nWHERE body_text LIKE '%dispute reserve%' \n   OR body_text LIKE '%unexplained variance%';\n```\nThis naive lexical search breaks in production:\n1. **Synonym Blindness:** The filing might say *\"chargeback remediation provisions shifted unexpectedly by \u20ac1.8M\"*. The words \"dispute reserve\" and \"unexplained variance\" appear nowhere in the text, so the SQL query returns **0 rows**.\n2. **Context Blindness:** A document matching the keyword *\"variance\"* might be discussing *\"variance in climate emissions\"*, returning completely irrelevant noise.\n3. **No Numerical Reasoning:** SQL `LIKE` patterns cannot verify whether $\\$14.2\\text{M} - \\$12.8\\text{M} = \\$1.4\\text{M}$ represents a material reporting breach under regulatory guidelines.\n\n**This is the reason AI exists:** to bridge the gap between human language nuances and structured data calculations.\n\n---\n\n## 0.5 The Five Mental Traps SQL Analysts Face When Learning AI\n\n```mermaid\nflowchart TD\n    T1[\"<b>Trap 1: Expecting Deterministic Logic</b><br/>SQL is binary (True/False). LLMs are probabilistic token samplers.<br/><i>Solution: Enforce deterministic schemas via Pydantic & Sandboxed Tools.</i>\"]\n    --> T2[\"<b>Trap 2: Believing AI 'Understands' Concepts</b><br/>Models do not 'know' finance; they navigate geometric vector trajectories.<br/><i>Solution: Ground all generation in retrieved database facts (RAG).</i>\"]\n    --> T3[\"<b>Trap 3: Thinking Prompting is Engineering</b><br/>Tweaking adjectives is prompt crafting, not systems architecture.<br/><i>Solution: Focus on retrieval ETL, state graphs, serving runtimes & evals.</i>\"]\n    --> T4[\"<b>Trap 4: Confusing Storage with Compute</b><br/>Weights in RAM do not compute answers; Tensor Cores do.<br/><i>Solution: Learn the Roofline Model and Memory Bandwidth limits.</i>\"]\n    --> T5[\"<b>Trap 5: Skipping Evaluation Metrics</b><br/>You wouldn't ship a SQL dashboard without verifying row counts.<br/><i>Solution: Use the RAG Triad and NLI Groundedness assertions.</i>\"]\n\n    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;\n```\n\n---\n\n## 0.6 How to Navigate This 10-Chapter Master Curriculum\n\nEach module in this handbook builds upon the last, transforming your relational foundations into full-stack AI engineering capability:\n\n```mermaid\nflowchart TD\n    Ch0[\"<b>Chapter 0 (You Are Here):</b><br/>The SQL-to-AI Rosetta Stone & Mental Models\"]\n    --> Ch1[\"<b>Chapter 1: The Mechanical Foundation</b><br/>Tensors, memory strides, BPE tokenizers & latent vector geometry\"]\n    --> Ch2[\"<b>Chapter 2: The Attention Engine</b><br/>Projections (Q, K, V), Scaled Dot-Product math & KV-Cache sizing\"]\n    --> Ch3[\"<b>Chapter 3: Adaptation & Fine-Tuning</b><br/>AdamW 16-byte memory wall, LoRA decomposition (W0 + BA) & DPO alignment\"]\n    --> Ch4[\"<b>Chapter 4: Production Hybrid RAG</b><br/>pgvector HNSW, PostgreSQL BM25 Full-Text & Reciprocal Rank Fusion\"]\n    --> Ch5[\"<b>Chapter 5: Stateful Agent Graphs</b><br/>LangGraph cyclic state machines, Pydantic tools & Human-in-the-Loop gates\"]\n    --> Ch6[\"<b>Chapter 6: High-Throughput Serving</b><br/>vLLM, PagedAttention virtual memory & Roofline latency models\"]\n    --> Ch7[\"<b>Chapter 7: Evals, Security & Governance</b><br/>The RAG Triad, NLI hallucination audits & EU AI Act compliance\"]\n    --> Ch8[\"<b>Chapter 8: The Production Capstone</b><br/>Autonomous Financial Risk & Compliance Auditor complete architecture\"]\n    --> Ch9[\"<b>Chapter 9: The 60-Day Hyper-Sprint</b><br/>The 30-60-30 deliberate practice protocol & 4 gate milestones\"]\n    --> Ch10[\"<b>Chapter 10: The Portfolio Playbook</b><br/>4 Tier-1 GitHub artifacts, Incident Post-Mortems (RCA) & Whiteboard defense\"]\n\n    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;\n    classDef current fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;\n    class Ch0 current;\n```\n\nYou are not starting from zero. You already think in tables, schemas, relations, and indexes. Now, let us step into Chapter 1 and build your first neural tensor from scratch.\n"
+  },
+  {
     "id": "ch-01",
     "title": "1. The Mechanical Foundation: Tensors & Embeddings",
     "summary": "Tensors, BBPE Tokenization, W_E Lookups, RoPE & Latent Space Geometry",
@@ -680,6 +686,281 @@
 
     // Interactive Simulators for Beginner-to-Expert Intuition
     function injectChapterWidgets(chapterId) {
+      if (chapterId === 'ch-00') {
+        // Interactive SQL-to-AI Translation Workbench
+        const widget = document.createElement('div');
+        widget.className = 'mt-8 p-5 rounded-2xl bg-gradient-to-br from-indigo-950/50 to-slate-900 border border-indigo-500/30 text-gray-200 shadow-xl';
+        widget.innerHTML = `
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="p-2 rounded-lg bg-brand-500/20 text-brand-400"><i data-lucide="database" class="w-5 h-5"></i></span>
+              <div>
+                <h4 class="font-bold text-base text-white">Interactive SQL-to-AI Translation Workbench</h4>
+                <p class="text-xs text-gray-400">Bridge relational SQL intuition directly into deep learning tensor math and GPU physics.</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/30">Zero-to-One Bridge</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-4 text-xs font-medium">
+            <button id="wb-tab-embed" class="wb-tab px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold transition flex items-center gap-1.5">
+              <i data-lucide="search" class="w-3.5 h-3.5"></i> 1. PK Lookup ➔ Embedding
+            </button>
+            <button id="wb-tab-attn" class="wb-tab px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center gap-1.5">
+              <i data-lucide="git-merge" class="w-3.5 h-3.5"></i> 2. Fuzzy Self-Join ➔ Self-Attention
+            </button>
+            <button id="wb-tab-guard" class="wb-tab px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-3.5 h-3.5"></i> 3. WHERE Filter ➔ Guardrail
+            </button>
+            <button id="wb-tab-eval" class="wb-tab px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center gap-1.5">
+              <i data-lucide="check-square" class="w-3.5 h-3.5"></i> 4. dbt Test ➔ RAG Triad Evals
+            </button>
+          </div>
+
+          <div id="wb-panel" class="p-4 rounded-xl bg-black/40 border border-gray-800">
+            <!-- Content injected dynamically -->
+          </div>
+        `;
+        bodyEl.appendChild(widget);
+
+        const tabEmbed = widget.querySelector('#wb-tab-embed');
+        const tabAttn = widget.querySelector('#wb-tab-attn');
+        const tabGuard = widget.querySelector('#wb-tab-guard');
+        const tabEval = widget.querySelector('#wb-tab-eval');
+        const panel = widget.querySelector('#wb-panel');
+
+        function setActiveTab(activeBtn) {
+          [tabEmbed, tabAttn, tabGuard, tabEval].forEach(btn => {
+            btn.className = 'wb-tab px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center gap-1.5';
+          });
+          activeBtn.className = 'wb-tab px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold transition flex items-center gap-1.5';
+        }
+
+        function renderEmbed() {
+          panel.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-brand-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="terminal" class="w-3.5 h-3.5"></i> SQL Relational World
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-emerald-400 font-mono text-[11px] overflow-x-auto leading-relaxed">-- Exact Primary Key Row Fetch
+SELECT col_1, col_2, ..., col_4096 
+FROM vocabulary_embedding_table 
+WHERE token_id = <span id="wb-embed-token-sql" class="text-amber-400 font-bold">3821</span>;
+-- Query plan: Index Scan using pk_vocab_id
+-- Cost: 1 page read from buffer pool</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Mental Model:</b> You are picking exactly 1 row from a table with 128,000 rows.</p>
+                  <p><b class="text-white">Relational Cost:</b> O(log N) in B-Tree or O(1) in Hash Index.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-indigo-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="cpu" class="w-3.5 h-3.5"></i> AI Tensor & GPU World
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-indigo-300 font-mono text-[11px] overflow-x-auto leading-relaxed"># PyTorch Tensor Slice
+token_vec = W_E[<span id="wb-embed-token-torch" class="text-amber-400 font-bold">3821</span>, :]  # Shape: [1, 4096]
+
+# Physical GPU Memory Offset Formula:
+Base_Addr + (Token_ID * 4,096 cols * 2 bytes)</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Hardware Physics:</b> Direct memory pointer jump into HBM3e VRAM.</p>
+                  <p><b class="text-white">Calculated Byte Offset:</b> <span id="wb-embed-offset" class="font-mono text-amber-400">0x01DE2000</span> (31.3 MB into weights table)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-gray-800/80">
+              <label class="block text-xs font-semibold text-gray-300 mb-1">
+                Simulate Token ID Lookup: <span id="wb-embed-slider-val" class="text-amber-400 font-mono font-bold">3,821</span> 
+                <span class="text-gray-500 font-normal">(" transaction")</span>
+              </label>
+              <input type="range" id="wb-embed-slider" min="1" max="128000" step="1" value="3821" class="w-full accent-brand-500">
+              <div class="flex justify-between text-[10px] text-gray-500 mt-0.5">
+                <span>0 (Start of Vocab)</span>
+                <span>64,000</span>
+                <span>128,000 (End of Vocab)</span>
+              </div>
+            </div>
+          `;
+
+          const slider = panel.querySelector('#wb-embed-slider');
+          const sqlVal = panel.querySelector('#wb-embed-token-sql');
+          const torchVal = panel.querySelector('#wb-embed-token-torch');
+          const sliderVal = panel.querySelector('#wb-embed-slider-val');
+          const offsetVal = panel.querySelector('#wb-embed-offset');
+
+          slider.oninput = () => {
+            const val = parseInt(slider.value);
+            sliderVal.innerText = val.toLocaleString();
+            sqlVal.innerText = val;
+            torchVal.innerText = val;
+            const bytes = val * 4096 * 2;
+            const hex = '0x' + bytes.toString(16).toUpperCase().padStart(8, '0');
+            const mb = (bytes / (1024 * 1024)).toFixed(2);
+            offsetVal.innerText = `${hex} (${mb} MB into W_E matrix)`;
+          };
+          if (window.lucide) lucide.createIcons();
+        }
+
+        function renderAttn() {
+          panel.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-brand-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="terminal" class="w-3.5 h-3.5"></i> SQL Relational World
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-emerald-400 font-mono text-[11px] overflow-x-auto leading-relaxed">-- Causal Fuzzy Self-Join
+SELECT 
+    q.pos AS token_pos,
+    k.pos AS context_pos,
+    (q.vec <#> k.vec) / 11.31 AS similarity_score,
+    v.value_vec
+FROM prompt_tokens q
+CROSS JOIN prompt_tokens k
+JOIN prompt_tokens v ON k.pos = v.pos
+WHERE k.pos <= q.pos; -- Causal Mask</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Mental Model:</b> Each row in the prompt compares itself against all prior rows to gather context.</p>
+                  <p><b class="text-white">Join Complexity:</b> O(N²) quadratic row comparisons.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-indigo-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="cpu" class="w-3.5 h-3.5"></i> AI Tensor & GPU World
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-indigo-300 font-mono text-[11px] overflow-x-auto leading-relaxed"># Scaled Dot-Product Attention
+scores = (Q @ K.T) / sqrt(d_k)
+scores.masked_fill(causal_mask == 0, -inf)
+attention_weights = softmax(scores, dim=-1)
+output = attention_weights @ V</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Hardware Physics:</b> Tensor Core GEMM matrix multiply with lower-triangular causal mask.</p>
+                  <p><b class="text-white">Active Pairwise Comparisons:</b> <span id="wb-attn-ops" class="font-mono text-amber-400">136</span> comparisons</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-gray-800/80">
+              <label class="block text-xs font-semibold text-gray-300 mb-1">
+                Sequence Length (Tokens N): <span id="wb-attn-n-val" class="text-amber-400 font-mono font-bold">16</span> tokens
+              </label>
+              <input type="range" id="wb-attn-slider" min="2" max="64" step="2" value="16" class="w-full accent-brand-500">
+              <div class="flex justify-between text-[10px] text-gray-500 mt-0.5">
+                <span>2 tokens</span>
+                <span>32 tokens</span>
+                <span>64 tokens</span>
+              </div>
+            </div>
+          `;
+
+          const slider = panel.querySelector('#wb-attn-slider');
+          const nVal = panel.querySelector('#wb-attn-n-val');
+          const opsVal = panel.querySelector('#wb-attn-ops');
+
+          slider.oninput = () => {
+            const n = parseInt(slider.value);
+            nVal.innerText = n;
+            const pairs = (n * (n + 1)) / 2;
+            const full = n * n;
+            opsVal.innerText = `${pairs} causal pairs (${full} in full matrix)`;
+          };
+          if (window.lucide) lucide.createIcons();
+        }
+
+        function renderGuard() {
+          panel.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-brand-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="terminal" class="w-3.5 h-3.5"></i> SQL Injection & RLS
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-emerald-400 font-mono text-[11px] overflow-x-auto leading-relaxed">-- Vulnerable Raw Concatenation:
+SELECT * FROM users WHERE user_id = '' OR 1=1; --';
+
+-- Production Defense:
+-- Parameterized Prepared Statement
+PREPARE stmt(int) AS SELECT * FROM users WHERE id = $1;
+EXECUTE stmt(104);</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Mental Model:</b> Separate raw executable code from untrusted user string inputs.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-indigo-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> LLM Prompt Injection & Guardrails
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-indigo-300 font-mono text-[11px] overflow-x-auto leading-relaxed"># Vulnerable Raw Concatenation:
+f"Summarize user input: {untrusted_user_text}"
+
+# Production Defense:
+# Structural XML Tags + Pydantic Schema Validation
+prompt = f"""<system>You are a financial classifier.</system>
+<untrusted_input>{sanitize(untrusted_user_text)}</untrusted_input>
+Respond strictly adhering to AuditOutputSchema."""</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Mental Model:</b> Delimiter sandboxing + rigid schema parsers prevent prompt jailbreaks.</p>
+                </div>
+              </div>
+            </div>
+          `;
+          if (window.lucide) lucide.createIcons();
+        }
+
+        function renderEval() {
+          panel.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-brand-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="terminal" class="w-3.5 h-3.5"></i> dbt Data Quality Assertions
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-emerald-400 font-mono text-[11px] overflow-x-auto leading-relaxed"># schema.yml in dbt
+models:
+  - name: fct_transactions
+    columns:
+      - name: amount
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">Analyst Routine:</b> You run <code class="text-brand-300">dbt test</code> before merging PRs to prevent broken metrics in dashboards.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-lg bg-gray-900/90 border border-gray-800">
+                <div class="text-[11px] font-mono uppercase text-indigo-400 font-bold mb-2 flex items-center gap-1">
+                  <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> The RAG Triad Evals in CI/CD
+                </div>
+                <pre class="bg-black/60 p-2.5 rounded text-indigo-300 font-mono text-[11px] overflow-x-auto leading-relaxed"># CI/CD Automated Assertion Suite
+def test_rag_pipeline_release():
+    results = evaluate(eval_dataset, metrics=[
+        context_precision, # Did retriever fetch noise?
+        faithfulness,      # Are claims grounded in context?
+        answer_relevancy   # Did it directly answer the user?
+    ])
+    assert results['faithfulness'] >= 0.95</pre>
+                <div class="mt-3 text-gray-300 text-[11px] space-y-1">
+                  <p><b class="text-white">AI Engineer Routine:</b> You run <code class="text-brand-300">pytest tests/evals</code> in GitHub Actions to stop hallucinations from reaching production.</p>
+                </div>
+              </div>
+            </div>
+          `;
+          if (window.lucide) lucide.createIcons();
+        }
+
+        tabEmbed.onclick = () => { setActiveTab(tabEmbed); renderEmbed(); };
+        tabAttn.onclick = () => { setActiveTab(tabAttn); renderAttn(); };
+        tabGuard.onclick = () => { setActiveTab(tabGuard); renderGuard(); };
+        tabEval.onclick = () => { setActiveTab(tabEval); renderEval(); };
+
+        // Initial render
+        renderEmbed();
+      }
+
       if (chapterId === 'ch-02') {
         // KV Cache Sizing Simulator
         const widget = document.createElement('div');

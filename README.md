@@ -43,6 +43,7 @@ A mobile-first, chapter-based interactive course reader and playbook engineered 
 
 ```text
 ai-handbook/
+├── chapter_00_sql_to_ai_rosetta_stone.md         # Zero-to-One Foundations: Relational SQL, Tables & JOINs to Tensors & Attention
 ├── chapter_01_foundations.md                     # Standalone deep dive on Tensors, Tokenization & Latent Space
 ├── chapter_02_attention_and_kv_cache.md           # Standalone deep dive on Attention, GQA & KV-Cache Sizing
 ├── chapter_03_training_lora_and_alignment.md      # Standalone deep dive on Loss, AdamW, LoRA/QLoRA & DPO
@@ -53,7 +54,7 @@ ai-handbook/
 ├── chapter_08_capstone_financial_auditor.md      # Standalone deep dive on Autonomous Auditor, pgvector, LangGraph & HITL
 ├── chapter_09_accelerated_roadmap_and_sprint.md  # Standalone deep dive on 60-Day Sprint, 30-60-30 Protocol & Gate Milestones
 ├── chapter_10_portfolio_and_postmortem_playbook.md # Standalone deep dive on Proof-of-Work, 4 Artifacts, RCAs & Whiteboards
-├── index.html                                    # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
+├── index.html                                    # Full mobile-first reader with KaTeX, Lucide, and 11 course chapters
 ├── manifest.json                                 # Progressive Web App (PWA) manifest configuration
 ├── package.json                                  # Project definition and static serve scripts
 ├── sw.js                                         # Offline service worker cache engine
@@ -98,6 +99,7 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 
 ## 📖 Complete Curriculum Overview
 
+- **Chapter 0:** The SQL-to-AI Rosetta Stone: Universal Concept Translation, Primary Key Lookups to $W_E$ Embeddings, Fuzzy Self-JOINs to Multi-Head Attention & What You Will Understand (with Interactive SQL-to-AI Translation Workbench)
 - **Chapter 1:** The Mechanical Foundation: Tensors, BBPE Tokenization, $W_E$ Lookups, RoPE & Latent Space Geometry
 - **Chapter 2:** The Attention Engine: Projections ($Q, K, V$), Scaled Dot-Product, GQA & Production KV Cache Math
 - **Chapter 3:** Adaptation & Optimization: Cross-Entropy Loss, AdamW, LoRA, QLoRA (NF4) & DPO Alignment
