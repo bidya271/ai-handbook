@@ -8,21 +8,23 @@ However, static embeddings cannot resolve context or polysemy (e.g., distinguish
 
 ```mermaid
 flowchart TD
-    X["Input Tensor: X ∈ ℝ^(B × S × d_model)"]
+    X["Input Tensor: X in R^(B x S x d_model)"]
     X --> WQ["Projection W_Q"]
     X --> WK["Projection W_K"]
     X --> WV["Projection W_V"]
     
-    WQ --> Q["Query Matrix (Q)<br/><i>What tokens seek</i>"]
-    WK --> K["Key Matrix (K)<br/><i>What tokens advertise</i>"]
-    WV --> V["Value Matrix (V)<br/><i>Payload delivered</i>"]
+    WQ --> Q["Query Matrix (Q)<br/>What tokens seek"]
+    WK --> K["Key Matrix (K)<br/>What tokens advertise"]
+    WV --> V["Value Matrix (V)<br/>Payload delivered"]
     
-    Q & K --> SD["Scaled Dot-Product:<br/><b>(Q K^T) / √d_k</b>"]
-    SD --> CM["Causal Masking (-∞ Future Positions)"]
-    CM --> SM["Softmax Row-wise Normalization (Σ = 1.0)"]
-    SM & V --> WVOut["Weighted Value Aggregation: <b>P × V</b>"]
-    WVOut --> WO["Output Projection Matrix: <b>W_O</b>"]
-    WO --> Res["Residual Stream Connection:<br/><b>X + Attention_Output</b>"]
+    Q --> SD["Scaled Dot-Product:<br/>(Q K^T) / sqrt(d_k)"]
+    K --> SD
+    SD --> CM["Causal Masking (-inf future)"]
+    CM --> SM["Softmax Row-wise Normalization (Sum = 1.0)"]
+    SM --> WVOut["Weighted Value Aggregation: P x V"]
+    V --> WVOut
+    WVOut --> WO["Output Projection Matrix: W_O"]
+    WO --> Res["Residual Stream Connection:<br/>X + Attention_Output"]
 
     classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
     classDef tensor fill:#312e81,stroke:#a5b4fc,stroke-width:2px,color:#ffffff;

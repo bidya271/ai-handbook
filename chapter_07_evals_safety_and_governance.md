@@ -11,9 +11,9 @@ You cannot maintain production reliability by testing with "vibes" or ad-hoc pro
 
 ```mermaid
 flowchart TD
-    Payload["Incoming User Payload"] --> Ingress["Input Guardrail Gateway<br/>• Regex & PII Redaction<br/>• Llama-Guard / ShieldGemma Classifier<br/>• Delimiter Sandboxing (&lt;UNTRUSTED_DATA&gt;)"]
+    Payload["Incoming User Payload"] --> Ingress["Input Guardrail Gateway<br/>• Regex & PII Redaction<br/>• Llama-Guard / ShieldGemma Classifier<br/>• Delimiter Sandboxing (UNTRUSTED_DATA)"]
     
-    Ingress -->|Approved Safe| Pipeline["Orchestration & RAG Pipeline<br/>(Retriever ──► Tools ──► LLM Generation)"]
+    Ingress -->|Approved Safe| Pipeline["Orchestration & RAG Pipeline<br/>(Retriever -> Tools -> LLM Generation)"]
     Ingress -->|Adversarial Threat| Reject["Request Rejected (HTTP 403 Safety Error)"]
     
     Pipeline --> Egress["Output Guardrail Gateway<br/>• NLI Groundedness Filter (≥ 0.95)<br/>• Schema & Policy Validator<br/>• Data Exfiltration Scanner (PCI-DSS/SSN)"]

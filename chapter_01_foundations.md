@@ -6,16 +6,16 @@ This chapter establishes the computational substrate of modern language models. 
 
 ```mermaid
 flowchart TD
-    A["Raw Text String:<br/><b>'Unsettled transaction #4091'</b>"] -->|1. Pre-tokenization Regex & Normalization| B["Sub-word Fragments:<br/><code>['Un', 'settled', ' transaction', ' #', '40', '91']</code>"]
-    B -->|2. Vocabulary Lookup Table: Tokenizer Model| C["Discrete Token IDs:<br/><code>[3821, 19284, 8219, 849, 1420, 9128]</code>"]
-    C -->|3. O(1) Memory Offset Indexing into W_E| D["Embedding Lookup Matrix:<br/><b>W_E ∈ ℝ^(|V| × d_model)</b>"]
-    D -->|4. Coordinate Rotation: RoPE or Absolute PE| E["Input Tensor:<br/><b>X_0 ∈ ℝ^(Batch × Sequence × d_model)</b>"]
-    E --> F["🚀 Ready for Self-Attention Layer 0"]
+    A["Raw Text String:<br/>Unsettled transaction 4091"] -->|1. Pre-tokenization Regex & Normalization| B["Sub-word Fragments:<br/>'Un', 'settled', ' transaction', ' 40', '91'"]
+    B -->|2. Vocabulary Lookup Table: Tokenizer Model| C["Discrete Token IDs:<br/>3821, 19284, 8219, 1420, 9128"]
+    C -->|3. Constant-Time Memory Offset Indexing| D["Embedding Lookup Matrix:<br/>W_E in R^(Vocab x d_model)"]
+    D -->|4. Coordinate Rotation: RoPE or Absolute PE| E["Input Tensor:<br/>X_0 in R^(Batch x Sequence x d_model)"]
+    E --> F["Ready for Self-Attention Layer 0"]
 
     classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
-    classDef start fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;
+    classDef startNode fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;
     classDef endNode fill:#065f46,stroke:#10b981,stroke-width:2px,color:#ffffff;
-    class A start;
+    class A startNode;
     class F endNode;
 ```
 
