@@ -183,7 +183,7 @@
     </button>
     
     <div class="flex flex-col text-center cursor-pointer" onclick="toggleDrawer(true)">
-      <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600 dark:text-brand-400" id="current-chapter-pill">Chapter 1 of 9</span>
+      <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600 dark:text-brand-400" id="current-chapter-pill">Chapter 1 of 10</span>
       <span class="text-sm font-extrabold truncate max-w-[190px] sm:max-w-md text-gray-900 dark:text-white" id="nav-title">Course Overview</span>
     </div>
 
@@ -230,7 +230,7 @@
         <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
         <span id="pwa-status">PWA Offline Ready</span>
       </span>
-      <span id="completed-count" class="font-semibold text-brand-600 dark:text-brand-400">0/9 Done</span>
+      <span id="completed-count" class="font-semibold text-brand-600 dark:text-brand-400">0/10 Done</span>
     </div>
   </aside>
 
@@ -266,377 +266,67 @@
   <script>
     // Embedded Complete Syllabus Content (9 Comprehensive Chapters)
     const CHAPTERS = [
-      {
-        id: "ch-00",
-        title: "1. The 5-Layer Core Competency Stack",
-        summary: "Data Foundations, Architecture, Agentic Graph Loops, Infra & Governance",
-        markdown: `
-# Chapter 1: The Core Competency Stack & Executive Blueprint
-
-Becoming an end-to-end industry expert in AI requires moving past surface-level prompting and treating AI as an **integrated engineering, data, and product discipline**. The industry splits into five foundational layers:
-
----
-
-### The 5 Core Competency Layers
-
-| Layer | Focus Areas | Practical Tooling & Frameworks |
-|---|---|---|
-| **1. Data & Math Foundation** | Linear algebra, probability, loss surfaces, data pipelines, embeddings, vector spaces. | \`NumPy\`, \`Pandas\`, \`PyTorch\`, \`SQL\` |
-| **2. Model Architecture & Fine-Tuning** | Transformer mechanics (Self-Attention, KV Cache), PEFT/LoRA, Quantization (GGUF, AWQ), RLHF/DPO. | \`Hugging Face Transformers\`, \`Unsloth\`, \`vLLM\`, \`DeepSpeed\` |
-| **3. Agentic Systems & Orchestration** | Tool calling, deterministic workflows, multi-agent coordination, graph execution, memory architectures. | \`LangGraph\`, \`LlamaIndex\`, \`CrewAI\`, \`AutoGen\`, \`LiteLLM\` |
-| **4. AI Engineering & Infrastructure** | Vector indexing, hybrid search, caching, tracing, evals, latency/cost optimization, guardrails. | \`Pinecone\`, \`Qdrant\`, \`pgvector\`, \`Langfuse\`, \`Arize Phoenix\`, \`NeMo\` |
-| **5. Product, Risk & Governance** | Trust & safety, hallucination mitigation, cost/token economics, compliance (EU AI Act), UX patterns. | Custom eval suites, \`Promptfoo\`, \`Ragas\` |
-
----
-
-### The Shift: From Prompt Tinkerer to AI Systems Architect
-
-Most practitioners remain stuck at the surface level: tweaking system prompts, relying on closed web UIs, and hoping for deterministic outputs. True industry authority requires mastering the **Full System Loop**:
-
-1. **Deterministic Foundations:** Understanding where rule-based heuristics and SQL outperform stochastic LLMs.
-2. **Deterministic Schemas:** Enforcing Pydantic / JSON Schema contracts before any agent executes an API or database mutation.
-3. **Continuous Benchmarking:** Validating every prompt and model change against an automated evaluation pipeline with synthetic test sets.
-4. **Latency & Compute Budgets:** Optimizing Time-To-First-Token (TTFT) and throughput using continuous batching and quantized weights.
-        `
-      },
-      {
-        id: "ch-01",
-        title: "2. Core AI Mechanics & Architecture",
-        summary: "Transformers, Attention Mechanisms, KV-Caching & Tokenomics",
-        markdown: `
-# Chapter 2: Foundational Mechanics & Model Architecture
-
-To operate as an end-to-end industry expert, you must look past the prompt window and understand how modern Large Language Models (LLMs) operate under the hood.
-
----
-
-### 1. The Scaled Dot-Product Attention Core
-
-At the center of every transformer architecture is the attention calculation:
-
-$$\\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$
-
-- **Queries ($Q$):** What the current token is actively searching for.
-- **Keys ($K$):** What prior tokens offer in the contextual horizon.
-- **Values ($V$):** The semantic payload retrieved when Query matches Key.
-- **Scaling Factor $\\sqrt{d_k}$:** Prevents dot products from exploding in high dimensions, which would saturate the softmax into zero-gradient zones.
-
-For multi-head attention (MHA), the computation expands into $h$ distinct representation subspaces:
-
-$$\\text{MultiHead}(Q, K, V) = \\text{Concat}(\\text{head}_1, \\dots, \\text{head}_h)W^O$$
-
-where each head is $\\text{head}_i = \\text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$.
-
----
-
-### 2. KV Cache & Inference Latency
-
-During autoregressive generation (the decoding phase), computing self-attention over previously produced tokens would require repetitive $O(N^2)$ FLOPs.
-
-- **KV Caching:** We store key-value matrices in GPU VRAM (HBM) for past tokens so only the single newest token computes attention against cached state.
-- **The Bottleneck:** Inference is rarely compute-bound; it is **memory bandwidth bound**. Moving the KV cache in and out of GPU registers dictates tokens per second (TPS).
-- **VRAM Formula for KV Cache:**
-
-$$\\text{KV Cache Size (Bytes)} = 2 \\times 2 \\times n_{\\text{layers}} \\times n_{\\text{heads}} \\times d_{\\text{head}} \\times n_{\\text{tokens}} \\times \\text{precision}$$
-
----
-
-### 3. Parameter-Efficient Fine-Tuning (PEFT / LoRA)
-
-Full-parameter fine-tuning of 70B models requires massive multi-node clusters. **LoRA (Low-Rank Adaptation)** fixes base model weights $W_0$ and trains small rank-decomposition matrices:
-
-$$W = W_0 + \\Delta W = W_0 + \\frac{\\alpha}{r} (B \\times A)$$
-
-where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with rank $r \\ll \\min(d, k)$. 
-
-- **Memory Reduction:** Cuts trainable memory requirements by up to 90%.
-- **Zero Latency Penalty:** At inference time, the low-rank delta $\\Delta W$ can be folded directly back into $W_0$.
-        `
-      },
-      {
-        id: "ch-02",
-        title: "3. Vector Search & Production RAG",
-        summary: "Chunking, Dense/Sparse Embeddings, Hybrid Search & Rerankers",
-        markdown: `
-# Chapter 3: Vector Search & Advanced RAG Pipelines
-
-Naive RAG (chunk $\\rightarrow$ embed $\\rightarrow$ top-k $\\rightarrow$ prompt) degrades rapidly in production environments. Building production-grade retrieval requires a multi-stage approach.
-
----
-
-### 1. Ingestion & Semantic Chunking
-
-- **Fixed-size Chunking (Fragile):** Arbitrary token limits (e.g., 512 tokens with 50-token overlap) split definitions and table rows across chunk boundaries.
-- **Contextual Chunking:** Prepend parent document metadata or an LLM-generated chunk summary before embedding.
-- **Semantic Window Retrieval:** Index tiny chunks (sentence-level) for precise vector matching, but return the surrounding sliding window of paragraphs to the model context.
-
----
-
-### 2. Hybrid Retrieval: Dense + Sparse Fusion
-
-- **Dense Vectors (Embeddings):** Understand semantic context, synonyms, and intent (e.g., \`text-embedding-3\`, \`BGE\`). Fail at alphanumeric identifiers, order numbers, or strict keyword lookups.
-- **Sparse Vectors (BM25 / SPLADE):** Exact keyword and phrase matchers.
-- **Reciprocal Rank Fusion (RRF):** Combine rankings deterministically:
-
-$$RRF\\_Score(d) = \\sum_{m \\in M} \\frac{1}{k + r_m(d)}$$
-
-where $M$ is the set of retrievers (e.g., Dense + BM25), $k \\approx 60$ is a smoothing constant, and $r_m(d)$ is the rank of document $d$ in system $m$.
-
----
-
-### 3. Cross-Encoder Reranking
-
-Vector similarity calculates dot-product angles independently (bi-encoder). Always pass the top 25–50 retrieved candidates through a **Cross-Encoder Reranker** (e.g., Cohere Rerank, BGE-Reranker-v2) to calculate true query-passage mutual interaction before injecting into the final context window.
-        `
-      },
-      {
-        id: "ch-03",
-        title: "4. Agentic Systems & State Machines",
-        summary: "Autonomous loops, LangGraph, tool calling & structured execution",
-        markdown: `
-# Chapter 4: Stateful Agentic Systems
-
-Autonomous agents transition simple generation into stateful, loop-based execution engines equipped with external tools.
-
----
-
-### 1. The Anatomy of an Agent Loop
-
-\`\`\`text
-User Query -> State Init -> LLM Decision -> Tool Call Needed?
-                                │
-             ┌──────────────────┴──────────────────┐
-            YES                                   NO
-             ▼                                     ▼
-       Execute Tool                        Generate Response
-             │                                     │
-       Append Output                               ▼
-             └───────────────────────────────> Update State -> End
-\`\`\`
-
----
-
-### 2. Escaping Fragile Prompt Chains
-
-Early agent frameworks relied on naive text parsing (ReAct prompt scripts). Production agents are constructed as **State Graphs** (e.g., LangGraph):
-
-1. **Nodes:** Plain functions that receive current state, perform an action (invoke model, query SQL DB, execute API), and return an updated partial state.
-2. **Edges:** Conditional routers determining the next node based on structured outputs.
-3. **Checkpointers:** Persisting graph state into Postgres/Redis to support pause/resume, human-in-the-loop approvals, and disaster recovery.
-
----
-
-### 3. Enforcing Strict JSON Schemas
-
-Never trust raw LLM output for tool execution. Bind function schemas via JSON Schema / Pydantic models. Validate system calls against type signatures before sending payloads to network layers.
-
-\`\`\`python
-from pydantic import BaseModel, Field
-
-class LedgerAuditAction(BaseModel):
-    account_id: str = Field(description="Normalized general ledger account code")
-    variance_threshold: float = Field(gt=0, le=0.05, description="Allowed variance ratio")
-    flagged_discrepancy: bool
-    evidence_citation_id: str
-\`\`\`
-        `
-      },
-      {
-        id: "ch-04",
-        title: "5. Inference Optimization & Serving",
-        summary: "vLLM, PagedAttention, Speculative Decoding & Quantization",
-        markdown: `
-# Chapter 5: Model Serving, Quantization & Latency
-
-Serving models at scale requires reducing latency (Time To First Token - TTFT) and maximizing throughput (Tokens Per Second - TPS).
-
----
-
-### 1. PagedAttention & Continuous Batching
-
-Traditional serving frameworks pre-allocated fixed memory blocks for each request's maximum context length, wasting up to 60-80% of GPU memory.
-
-- **PagedAttention (vLLM):** Allocates memory for keys and values in non-contiguous virtual pages, mirroring modern OS virtual memory paging.
-- **Continuous Batching:** Dynamically inserts incoming requests into active GPU forward passes rather than waiting for an entire batch to finish generation.
-
----
-
-### 2. Quantization Standards
-
-| Format | Bit Width | Memory Footprint | Primary Use Case |
-|---|---|---|---|
-| **FP16 / BF16** | 16 bits | 2 GB per 1B params | Training & baseline precision |
-| **AWQ / GPTQ** | 4 bits | ~0.65 GB per 1B params | GPU cloud inference at scale |
-| **GGUF** | 4–8 bits | Variable | Local CPU/Metal/Edge runtimes |
-
----
-
-### 3. Speculative Decoding
-
-Run a tiny draft model (e.g., 1B parameter model) to speculatively output candidate tokens in rapid succession. The massive target model (e.g., 70B parameter model) validates all candidate tokens concurrently in a single forward pass, providing a **2x–3x speedup with zero mathematical loss in accuracy**.
-        `
-      },
-      {
-        id: "ch-05",
-        title: "6. Production Evals & Guardrails",
-        summary: "LLM-as-a-Judge, Synthetic Data, Ragas & Hallucination Audits",
-        markdown: `
-# Chapter 6: Automated Evaluations & Security Guardrails
-
-You cannot improve what you cannot measure. Production AI systems require continuous deterministic and probabilistic evaluation pipelines.
-
----
-
-### 1. The RAG Triad Metrics
-
-1. **Context Relevance:** Did the retriever fetch chunks strictly relevant to the user query?
-2. **Groundedness / Faithfulness:** Is every claim in the generated answer supported directly by the retrieved context?
-3. **Answer Relevance:** Does the output directly answer the user prompt without tangential fluff?
-
----
-
-### 2. LLM-as-a-Judge Design Rules
-
-When using an LLM to evaluate another LLM:
-- **Calibrate with Few-Shot Rubrics:** Provide explicit 1-5 scoring anchors with annotated historical examples.
-- **Chain of Thought First:** Force the evaluator model to generate reasoning justification before emitting a final score token.
-- **Permutation Invariance:** Swap candidate output orders when running comparative A/B judgements to negate position bias.
-
----
-
-### 3. Defending Prompt Injections & Jailbreaks
-
-- **Delimiter Sandboxing:** Wrap untrusted user inputs in XML/Markdown blocks and explicitly instruct the model to treat content within those tags strictly as data, never as system instructions.
-- **Dual-Model Guards:** Route ambiguous requests through a lightweight classifier (or guardrail service) that scores adversarial intent before passing inputs to downstream execution tools.
-        `
-      },
-      {
-        id: "ch-06",
-        title: "7. End-to-End Capstone Project Blueprint",
-        summary: "Autonomous Financial Ledger Auditor portfolio implementation",
-        markdown: `
-# Chapter 7: Production Capstone Project Blueprint
-
-To demonstrate true industry expertise, construct a reference system integrating all layers of this curriculum.
-
----
-
-### The System: "Autonomous Financial Ledger Auditor"
-
-#### Architecture Specifications:
-1. **Ingestion Service:** Ingests SEC 10-K filings, splits via semantic window chunking, and indexes dense vectors in a vector database alongside BM25 sparse indexes.
-2. **Hybrid Retriever:** Implements Cohere reranking on the top 30 retrieved chunks.
-3. **Stateful Graph Execution:**
-   - **Node A (Planner):** Analyzes the financial audit scope.
-   - **Node B (Tool Executor):** Runs deterministic Python math calculations on extracted balance sheet numbers.
-   - **Node C (Auditor Judge):** Verifies table figures against raw source text citations.
-4. **Guardrail Layer:** Rejects hallucinated calculations where variance is $>0.001\\%$.
-5. **Observability:** Tracks latency, TTFT, and total token cost per run via OpenTelemetry / Langfuse instrumentation.
-
----
-
-### Recommended Artifacts to Publish:
-- GitHub repository with automated GitHub Actions CI running deterministic eval suites.
-- Live Vercel dashboard showcasing latency and token consumption metrics.
-- Technical write-up highlighting failure edge cases and architectural trade-offs.
-        `
-      },
-      {
-        id: "ch-07",
-        title: "8. Accelerated Fast-Track Roadmap (Beat the 9-Month Timeline)",
-        summary: "Compressing 9 Months into an Intensive 8-Week / 60-Day Execution Sprint",
-        markdown: `
-# Chapter 8: The Accelerated Fast-Track Roadmap
-
-The traditional industry roadmap suggests 9 months (Months 1–3 for mechanics, Months 4–6 for RAG & agents, Months 7–9 for evals & capstone). 
-
-**You can compress this entire timeline into an intensive 8-Week (60-Day) Sprint** through deliberate daily practice, focused execution, and pre-built tooling scaffolding.
-
----
-
-### Accelerated 8-Week Sprint Overview
-
-| Sprint | Duration | Core Goal | Verifiable Deliverable |
-|---|---|---|---|
-| **Sprint 1** | Week 1–2 | Attention & Transformer Mechanics from Scratch | Working PyTorch MHA module + tiny autoregressive decoder trained on Shakespeare. |
-| **Sprint 2** | Week 3–4 | Hybrid RAG, Ingestion & Fine-Tuning | Production Hybrid RAG pipeline with BM25 + Qdrant + Cohere Reranker, plus QLoRA JSON adapter. |
-| **Sprint 3** | Week 5–6 | Stateful Agent Graphs & vLLM Serving | LangGraph multi-tool loop with human-in-the-loop checkpointing and vLLM benchmarking. |
-| **Sprint 4** | Week 7–8 | Evals, Guardrails & Capstone Deployment | Deployed Ledger Auditor with Langfuse tracing, Ragas eval CI, and public technical post-mortem. |
-
----
-
-### The Daily Deliberate Practice Protocol (2 Hours/Day)
-
-To compress 9 months into 60 days, follow the **30-60-30 Protocol**:
-
-- **30 Mins (Theoretical Deconstruction):** Read paper equations or system architectures (Attention Is All You Need, LoRA paper, vLLM PagedAttention).
-- **60 Mins (Hands-on Code):** Write clean, production-grade Python/TypeScript code. Zero copy-pasting; code the mechanisms line by line.
-- **30 Mins (Proof of Work & Documentation):** Commit changes to GitHub, log latency/eval numbers, and draft technical notes for your post-mortem.
-
----
-
-### Weekly Sprint Breakdown
-
-#### Weeks 1–2: Mechanics over Magic
-- **Day 1–4:** Implement scaled dot-product attention and multi-head attention in PyTorch from pure matrix operations.
-- **Day 5–8:** Build the KV-cache mechanism in a toy decoder. Benchmark inference latency with and without caching.
-- **Day 9–14:** Fine-tune Mistral/Llama using \`Unsloth\` or \`PEFT\` on a custom structured output dataset. Verify JSON schema adherence.
-
-#### Weeks 3–4: Production Retrieval
-- **Day 15–20:** Build a hybrid search index using \`pgvector\` or \`Qdrant\` alongside BM25. Implement Reciprocal Rank Fusion (RRF).
-- **Day 21–28:** Wire a Cross-Encoder Reranker (\`bge-reranker-large\` or Cohere API). Benchmark NDCG@10 against naive vector search.
-
-#### Weeks 5–6: Stateful Agents & High-Throughput Serving
-- **Day 29–35:** Build a LangGraph state machine. Include cyclic loops, structured Pydantic tool schemas, and PostgreSQL state checkpointers.
-- **Day 36–42:** Deploy an open model on \`vLLM\` or \`Ollama\`. Measure TTFT, TPS, and GPU VRAM consumption across context lengths.
-
-#### Weeks 7–8: Evals, Guardrails & Portfolio Launch
-- **Day 43–49:** Implement automated eval suites using \`Ragas\` and \`Promptfoo\` in GitHub Actions CI.
-- **Day 50–56:** Complete the End-to-End Capstone (Autonomous Financial Ledger Auditor) with Langfuse tracing.
-- **Day 57–60:** Publish your technical post-mortem and portfolio repository to GitHub and Vercel!
-        `
-      },
-      {
-        id: "ch-08",
-        title: "9. The 'Build in Public' Portfolio & Post-Mortem Playbook",
-        summary: "Shipping resilient artifacts, failure deep-dives & product-engineering bridges",
-        markdown: `
-# Chapter 9: The "Build in Public" Portfolio Playbook
-
-Theory without functional artifacts carries little weight in the market. True industry authority comes from proving you can ship resilient, production-ready systems.
-
----
-
-### 1. The Anatomy of a High-Impact AI Portfolio
-
-Don't just build another generic chatbot. Build an autonomous system that interfaces with real external systems:
-
-1. **A Production Proof of Concept:** Autonomous ledger auditor, real-time risk classification engine, or multi-source synthesis agent.
-2. **Deterministic Evaluation Suites:** Show automated CI test runs tracking groundedness, faithfulness, and regression.
-3. **Observability Dashboards:** Include live telemetry screenshots showing TTFT, token cost per transaction, and latency profiles.
-
----
-
-### 2. How to Write High-Credibility Technical Post-Mortems
-
-Top engineering teams hire practitioners who understand failure modes. Structure your write-ups using this proven framework:
-
-- **The Problem:** The latency or accuracy failure of the naive baseline (e.g., *"Why naive RAG returned hallucinated citations in 22% of queries"*).
-- **The Investigation:** Telemetry traces, attention maps, or vector distribution plots pinpointing the root cause.
-- **The Architectural Fix:** Upgrading to semantic window chunking, cross-encoder reranking, or deterministic math execution nodes.
-- **The Verifiable Results:** Before-and-after benchmarks: 99.4% faithfulness, 42% cost reduction, and 3x TTFT improvement.
-
----
-
-### 3. The Product-Engineering Bridge
-
-The strongest AI leaders aren't just researchers or coders; they understand:
-- **Latency vs. Quality Trade-offs:** Knowing when a quantized 8B model matches a 70B model with a 75% latency reduction.
-- **Compute Margins:** Calculating unit economics per user session before scaling.
-- **Deterministic Superiority:** Knowing where a traditional rule-based algorithm or SQL join beats an LLM every time.
-        `
-      }
-    ];
+  {
+    "id": "ch-01",
+    "title": "1. The Mechanical Foundation: Tensors & Embeddings",
+    "summary": "Tensors, BBPE Tokenization, W_E Lookups, RoPE & Latent Space Geometry",
+    "markdown": "# CHAPTER 1: The Mechanical Foundation \u2014 Tensors, Tokenization, Embeddings & Geometric Latent Space\n\n## 1.1 Architectural Overview & Layer Scope\n\nThis chapter establishes the computational substrate of modern language models. Before attention, context windows, or reasoning exist, neural networks operate purely on structured numeric multidimensional arrays (tensors). \n\n```text\n[Raw String: \"Unsettled transaction #4091\"]\n\u2502\n\u25bc (Pre-tokenization Regex & Normalization)\n[\"Un\", \"settled\", \" transaction\", \" #\", \"40\", \"91\"]\n\u2502\n\u25bc (Vocabulary Lookup Table: Tokenizer Model)\n[Token IDs: 3821, 19284, 8219, 849, 1420, 9128]\n\u2502\n\u25bc (One-Hot Multiplier / Direct Matrix Indexing)\n[Embedding Weights Table Lookup: W_E \u2208 \u211d^(|V| \u00d7 d_model)]\n\u2502\n\u25bc (Add/Apply Positional Embeddings: RoPE / Absolute)\n[Input Tensor: X_0 \u2208 \u211d^(Batch_Size \u00d7 Sequence_Length \u00d7 d_model)]\n\u2502\n\u25bc\n[Ready for Self-Attention Layer 0]\n```\n\nEvery concept in this module is cross-referenced with relational data engineering and linear algebra primitives.\n\n---\n\n## 1.2 Tensor Mechanics: The Relational Geometry\n\nIn standard relational engineering, datasets are stored in two-dimensional schemas consisting of rows (entities) and columns (attributes). Deep learning structures data into **N-Dimensional Tensors**, which are contiguous memory blocks addressed by $N$ indices.\n\n### 1.2.1 Tensor Dimension Hierarchy\n\n| Dimensionality | Formal Term | Relational Database Analogy | LLM Runtime Equivalent |\n|---|---|---|---|\n| **0D** | Scalar | A single typed column value (`FLOAT4`) | A single loss value, learning rate $\\eta$, or token cross-entropy penalty. |\n| **1D** | Vector | A single row or primary key feature record | A single token representation $\\vec{x} \\in \\mathbb{R}^{d_{\\text{model}}}$ (e.g., 4,096 floating-point columns). |\n| **2D** | Matrix | A standard SQL Table / materialized view | An entire prompt sequence of tokens: $\\mathbb{R}^{S \\times d_{\\text{model}}}$, or a weight matrix $W$. |\n| **3D** | 3-Tensor | A partitioned set of identical table schemas | A parallel training or inference batch: $\\mathbb{R}^{B \\times S \\times d_{\\text{model}}}$ ($B$ sequences, each length $S$). |\n| **4D** | 4-Tensor | A partitioned multi-tenant cube | Multi-Head Attention weights: $\\mathbb{R}^{B \\times H \\times S \\times d_k}$ ($H$ independent attention heads). |\n\n### 1.2.2 Memory Contiguity, Strides, and Physical Hardware Layout\nIn systems like PyTorch or CUDA C, a tensor is not stored as a nested array of pointers. It is stored as a **single, flat contiguous block of 1D memory** wrapped with metadata:\n- **Shape:** The logical dimensions, e.g., `(Batch=2, Sequence=3, Dimensions=4)`.\n- **Stride:** The number of physical memory elements that must be skipped to move to the next item along each logical dimension.\n\nFor a 3D tensor of shape $(B, S, D)$:\n$$\\text{Stride}_D = 1$$\n$$\\text{Stride}_S = D$$\n$$\\text{Stride}_B = S \\times D$$\n\n**Physical Offset Formula:**\n$$\\text{Physical Index}(b, s, d) = (b \\times \\text{Stride}_B) + (s \\times \\text{Stride}_S) + (d \\times \\text{Stride}_D)$$\n\n#### The Data Engineering Implication:\nTransposing a matrix or reshaping a tensor (e.g., switching from row-major to column-major for matrix multiplication) does not move bytes in RAM immediately; it changes the `stride` view. \nIf an operation requires contiguous memory (such as certain high-performance GPU kernel calls), calling a copy/contiguous operation forces an expensive physical rearrangement of bytes in High Bandwidth Memory (HBM).\n\n---\n\n## 1.3 Tokenization: The Discrete-to-Symbolic Interface\n\nNeural networks cannot process raw bytes, characters, or strings directly. They require discrete categorical keys that map to learned vectors. The component responsible for this deterministic transformation is the **Tokenizer**.\n\n### 1.3.1 Why Naive Tokenization Strategies Fail\n1. **Character-Level Tokenization (`'c', 'a', 't'`):**\n   - *Problem:* Sequences become massive. A 1,000-word corporate report becomes 6,000+ tokens. Because Transformer attention scales quadratically ($O(S^2)$) with sequence length, character-level processing saturates memory and destroys long-range context dependencies.\n2. **Word-Level Tokenization (`'unsettled', 'transaction'`):**\n   - *Problem:* Vocabulary explosion. English alone contains millions of distinct words, compound terms, and morphological variants. Any unseen word or misspelling (e.g., `'unsettld'`) results in an `[UNK]` (Unknown Token) error, throwing away all semantic meaning.\n\n### 1.3.2 Production Standard: Byte-Pair Encoding (BPE)\nModern frontier models (GPT-4, LLaMA-3, Claude) use variants of **Byte-level Byte-Pair Encoding (BBPE)**. BBPE constructs a vocabulary of sub-word fragments derived statistically from training corpora.\n\n#### The Training Algorithm for BPE:\n1. **Initialize Base Vocabulary:** Start with all unique fundamental base symbols (the 256 individual bytes of the ASCII/UTF-8 byte spectrum).\n2. **Frequency Counting:** Read the entire training corpus. Count the occurrence of all adjacent symbol pairs.\n3. **Merge Most Frequent Pair:** Identify the pair $(c_i, c_j)$ that occurs with the highest frequency. Merge them into a single new sub-word token $c_{\\text{new}} = c_i c_j$.\n4. **Iterate:** Repeat the merge process iteratively until the vocabulary reaches a predetermined budget (e.g., $\\vert{}V\\vert{} = 32,000$ or $128,256$ tokens).\n\n```text\nInitial Corpus: \"low lowest newer wider\"\nStep 1: ['l', 'o', 'w', ' ', 'l', 'o', 'w', 'e', 's', 't', ' ', 'n', 'e', 'w', 'e', 'r', ' ', 'w', 'i', 'd', 'e', 'r']\nStep 2: Most frequent adjacent pair is ('e', 'r') -> Merge to 'er'\nStep 3: Most frequent adjacent pair is ('l', 'o') -> Merge to 'lo'\nStep 4: Most frequent adjacent pair is ('lo', 'w') -> Merge to 'low'\nResulting Token List includes: 'low', 'lowest', 'newer', 'wider'\n```\n\n#### Why Byte-Level Matters:\nBy grounding the base vocabulary in raw **bytes (0x00 to 0xFF)** rather than Unicode characters, the out-of-vocabulary (`[UNK]`) rate drops to **zero**. Any arbitrary binary sequence, unseen character, foreign script, emoji, or code string can be broken down into valid constituent bytes.\n\n---\n\n## 1.4 The Embedding Layer: Mapping Symbolic Keys to Semantic Vectors\n\nOnce a string is mapped to an array of integer token IDs:\n$$\\text{Tokens} = [t_1, t_2, \\dots, t_S], \\quad t_i \\in \\{0, 1, \\dots, \\vert{}V\\vert{}-1\\}$$\n\nIt must be mapped into continuous vector space via the **Embedding Matrix** $W_E$.\n\n### 1.4.1 Mathematical Equivalence: One-Hot Multiplication vs. Indexed Table Lookup\n\n#### Theoretical Formulation:\nMathematically, a token lookup is expressed as multiplying a **One-Hot Vector** $\\vec{x}_{\\text{one-hot}} \\in \\mathbb{R}^{\\vert{}V\\vert{}}$ (a vector of length $\\vert{}V\\vert{}$ where every entry is 0 except for a 1 at index $t_i$) by a weight matrix $W_E \\in \\mathbb{R}^{\\vert{}V\\vert{} \\times d_{\\text{model}}}$:\n\n$$\\vec{e}_i = \\vec{x}_{\\text{one-hot}} \\times W_E$$\n\n```text\nOne-Hot Vector (Length = 100,000):\n[ 0, 0, 0, ..., 1 (at position 3821), ..., 0, 0 ]\n\u2502\n\u25bc (Matrix Multiply against W_E)\nWeights Matrix W_E (100,000 rows \u00d7 4,096 columns):\nRow 0:     [  0.012, -0.441, ...,  0.119 ]\n...\nRow 3821:  [  0.891, -0.124, ..., -0.551 ]  <\u2500\u2500 THIS ENTIRE ROW IS EXTRACTED\n...\nRow 99999: [ -0.003,  0.781, ...,  0.002 ]\n```\n\n#### Physical Hardware Reality (The SQL Join Equivalence):\nIn physical GPU execution, you **never** instantiate a one-hot vector of size 128,000 to perform a matrix multiplication; doing so would waste billions of operations multiplying by zero.\n\nInstead, the operation is executed as an **$O(1)$ memory offset lookup**\u2014the identical algorithmic mechanism of a primary-key index scan in relational engines:\n\n$$\\text{Memory Address}(\\vec{e}_i) = \\text{Base Address}(W_E) + (t_i \\times d_{\\text{model}} \\times \\text{SizeOf}(\\text{Float16}))$$\n\n---\n\n## 1.5 Geometry of Latent Space: Metrics and Distances\n\nIn high-dimensional latent space ($\\mathbb{R}^{d_{\\text{model}}}$, where typically $d_{\\text{model}} \\in [4096, 8192]$), continuous vectors encode semantic attributes along geometric directions.\n\n### 1.5.1 Distance & Similarity Metrics\n\n#### 1. Dot Product (Inner Product):\n$$\\langle \\vec{A}, \\vec{B} \\rangle = \\vec{A} \\cdot \\vec{B} = \\sum_{k=1}^{d} A_k B_k$$\n- **Characteristics:** Unbounded. Measures both **direction** and **magnitude**. \n- **System Impact:** If a model assigns longer vector norms to frequent tokens, the dot product will artificially favor them regardless of semantic alignment.\n\n#### 2. Euclidean Distance ($L_2$ Norm):\n$$D_{L2}(\\vec{A}, \\vec{B}) = \\sqrt{\\sum_{k=1}^d (A_k - B_k)^2}$$\n- **Characteristics:** Measures direct physical distance in geometric space.\n- **Limitation:** In very high dimensions, the **Curse of Dimensionality** causes the distance between almost all points to converge to a uniform distribution, reducing discriminative capability unless normalized.\n\n#### 3. Cosine Similarity:\n$$\\cos(\\theta) = \\frac{\\vec{A} \\cdot \\vec{B}}{\\Vert{}\\vec{A}\\Vert{} \\Vert{}\\vec{B}\\Vert{}} = \\frac{\\sum_{k=1}^d A_k B_k}{\\sqrt{\\sum_{k=1}^d A_k^2} \\sqrt{\\sum_{k=1}^d B_k^2}}$$\n- **Characteristics:** Bounded strictly between $[-1.0, 1.0]$. \n- **Geometric Meaning:** Completely discards vector magnitude and measures purely the **angular alignment** of the semantic trajectories.\n- **Optimization Trick:** If vectors are normalized to unit length ($\\Vert{}\\vec{A}\\Vert{}_2 = 1.0$) upon generation, the Cosine Similarity is **identical to the simple Dot Product**, reducing computational load by 60%.\n\n### 1.5.2 The Problem of Representation Degeneracy: Anisotropy\nIn theoretical descriptions, vectors are assumed to span the entire $d$-dimensional space evenly. In practice, trained LLM embeddings suffer from **Anisotropy (The Cone Effect)**:\n- Instead of using the full hypersphere uniformly, token embeddings cluster tightly within a narrow, highly biased conical sub-space.\n- As a consequence, two completely unrelated words can have a raw cosine similarity of $+0.70$ or higher simply because all vectors lean into the same quadrant of the space.\n- **Remedy in Production Systems:** Cosine scoring thresholds must be calibrated against a baseline distribution, or vectors must undergo centering and whitening transformations ($\\vec{v}' = (\\vec{v} - \\vec{\\mu}) \\Sigma^{-1/2}$).\n\n---\n\n## 1.6 Positional Encodings: Injecting Spatial Coordinates\n\nThe matrix multiplications within transformer layers are **permutation invariant**. \n\nIf you feed the model:\n- `Prompt A: \"Bank blocked the merchant because of risk\"`\n- `Prompt B: \"Merchant blocked the bank because of risk\"`\n\nWithout explicit positional intervention, the transformer computes the **identical unordered bag-of-words representation** for both prompts. The model has no innate concept of order, sequence, or distance between tokens.\n\n### 1.6.1 Approach 1: Absolute Positional Embeddings (Original Attention Paper)\nThe original Transformer added a fixed or learned static vector $\\vec{p}_{\\text{pos}}$ to the token embedding $\\vec{e}_i$:\n$$\\vec{x}_i = \\vec{e}_i + \\vec{p}_{\\text{pos}}$$\nUsing static trigonometric functions:\n$$PE_{(\\text{pos}, 2i)} = \\sin\\left(\\frac{\\text{pos}}{10000^{2i/d_{\\text{model}}}}\\right)$$\n$$PE_{(\\text{pos}, 2i+1)} = \\cos\\left(\\frac{\\text{pos}}{10000^{2i/d_{\\text{model}}}}\\right)$$\n- **Weakness:** Does not generalize to sequence lengths beyond the hard ceiling set during training ($S > S_{\\text{train}}$ fails catastrophically).\n\n### 1.6.2 Modern Production Standard: Rotary Position Embedding (RoPE)\nModern models (LLaMA-3, Mistral, Qwen) do not add a position vector to the token embedding. Instead, they apply a **complex coordinate rotation** to the Query and Key vectors at each attention head.\n\n#### Mechanical Logic of RoPE:\nGiven a 2D component of a vector $(x_1, x_2)$ at position $m$, RoPE rotates the vector by an angle proportional to its token index $m \\theta$:\n\n$$\\begin{pmatrix} x_1' \\\\ x_2' \\end{pmatrix} = \\begin{pmatrix} \\cos(m\\theta) & -\\sin(m\\theta) \\\\ \\sin(m\\theta) & \\cos(m\\theta) \\end{pmatrix} \\begin{pmatrix} x_1 \\\\ x_2 \\end{pmatrix}$$\n\n#### Why RoPE Outperforms Absolute Encodings:\nWhen calculating the dot product between Query at position $m$ and Key at position $n$:\n$$\\langle R_m \\vec{q}, R_n \\vec{k} \\rangle = \\vec{q}^T R_m^T R_n \\vec{k} = \\vec{q}^T R_{n-m} \\vec{k}$$\n\nThe attention score depends **exclusively on the relative distance $(n - m)$** between the tokens, rather than their absolute index positions. This allows modern models to extend context windows from 4K tokens up to 128K+ tokens through techniques like RoPE frequency interpolation.\n\n---\n\n## 1.7 Concrete Mathematical Walkthrough\n\nLet us trace a concrete numerical example with a toy model:\n- Vocabulary Size: $\\vert{}V\\vert{} = 4$ tokens: `[0: \"Data\", 1: \"Risk\", 2: \"Ledger\", 3: \"Audit\"]`\n- Hidden Dimension: $d_{\\text{model}} = 4$\n\n### Step 1: Weight Matrix Initialization ($W_E$)\nAssume the pre-trained embedding table contains the following learned weights:\n\n$$W_E = \\begin{bmatrix} 0.90 & -0.10 & 0.40 & 0.00 \\\\ 0.10 & 0.85 & 0.70 & -0.20 \\\\ 0.80 & -0.15 & 0.50 & 0.10 \\\\ 0.15 & 0.80 & 0.65 & -0.10 \\end{bmatrix} \\begin{matrix} \\text{(Token 0: \"Data\")} \\\\ \\text{(Token 1: \"Risk\")} \\\\ \\text{(Token 2: \"Ledger\")} \\\\ \\text{(Token 3: \"Audit\")} \\end{matrix}$$\n\n### Step 2: Ingestion & Vector Retrieval\nInput string: `\"Data Risk\"`\n1. Tokenizer maps tokens: `[\"Data\", \"Risk\"]` $\\rightarrow$ `[Index 0, Index 1]`\n2. Direct index extraction from $W_E$:\n   $$\\vec{v}_{\\text{Data}} = [0.90, -0.10, 0.40, 0.00]$$\n   $$\\vec{v}_{\\text{Risk}} = [0.10, 0.85, 0.70, -0.20]$$\n   $$\\vec{v}_{\\text{Audit}} = [0.15, 0.80, 0.65, -0.10]$$\n\n### Step 3: Compute Dot Product and Semantic Distance\nCalculate the similarity between `\"Risk\"` and `\"Audit\"`:\n$$\\vec{v}_{\\text{Risk}} \\cdot \\vec{v}_{\\text{Audit}} = (0.10 \\times 0.15) + (0.85 \\times 0.80) + (0.70 \\times 0.65) + (-0.20 \\times -0.10)$$\n$$= 0.015 + 0.680 + 0.455 + 0.020 = 1.170$$\n\nCalculate the similarity between `\"Data\"` and `\"Risk\"`:\n$$\\vec{v}_{\\text{Data}} \\cdot \\vec{v}_{\\text{Risk}} = (0.90 \\times 0.10) + (-0.10 \\times 0.85) + (0.40 \\times 0.70) + (0.00 \\times -0.20)$$\n$$= 0.090 - 0.085 + 0.280 + 0.000 = 0.285$$\n\n**Conclusion from Data:** The model confirms that `\"Risk\"` and `\"Audit\"` have an inner product ($1.170$) over **$4\\times$ higher** than `\"Data\"` and `\"Risk\"` ($0.285$), confirming spatial alignment along the risk-compliance latent direction.\n\n---\n\n## 1.8 Production Failure Modes & Engineering Audits\n\nWhen operating data pipelines that feed or utilize token representations, systems break down in predictable ways:\n\n### 1. The Tokenizer Drift Bug\n- **Failure:** An embedding index is created using `cl100k_base` (OpenAI text-embedding-ada-002), but a downstream service evaluates inputs using a newer or different sub-word dictionary (e.g., LLaMA-3 tokenizer).\n- **Result:** Complete semantic corruption. Token ID `4819` in vocabulary A might mean `\"database\"`, while in vocabulary B it corresponds to a Japanese unicode fragment or a carriage return.\n- **Audit Rule:** The tokenizer model binary must be version-locked and hashed as an immutable artifact directly alongside the model weights.\n\n### 2. Whitespace Sensitivity & Non-Idempotent Joins\n- **Failure:** Sub-word tokenizers treat leading spaces as distinct characters:\n  - `\" risk\"` (with space) $\\rightarrow$ Token ID `2814`\n  - `\"risk\"` (no space) $\\rightarrow$ Token ID `9211`\n- **Impact:** Merging or cleaning text naively in an ETL pipeline before vectorization can alter retrieval performance. Stripping leading whitespace can change the token ID sequence entirely, lowering vector similarity recall.\n- **Audit Rule:** Ensure raw text payloads bypass standard trim functions if the downstream tokenizer expects native syntax and layout.\n\n### 3. Precision Underflow (FP32 to FP16/BF16)\n- **Failure:** Casting embeddings from `Float32` down to `Float16` to save RAM without checking dynamic range.\n- **Result:** $L_2$ norm computations square each term ($\\sum x_i^2$). If vectors contain many large activations, the squared sum can overflow the maximum limit of FP16 ($65,504$), producing `Inf` or `NaN` (Not a Number) values that break ranking models.\n- **Audit Rule:** In data transformation code, always compute norms and normalizations in `Float32` precision before down-casting the resulting unit vectors to half-precision storage.\n\n---\n\n## 1.9 Chapter Summary Checkpoint\n\n1. **Tensors** are contiguous flat memory buffers accessed via computed stride offsets, mapping cleanly to high-dimensional SQL feature records.\n2. **Tokenization** via Byte-level BPE provides a finite, sub-word vocabulary with zero out-of-vocabulary exceptions by falling back to raw byte sequences.\n3. **Embedding** is not a matrix multiplication in production hardware; it is an $O(1)$ memory index lookup into a static weight table.\n4. **Positional Encoding** (RoPE) is mathematically necessary because self-attention is naturally permutation invariant; rotating vectors ensures relative distance is preserved during calculations.\n"
+  },
+  {
+    "id": "ch-02",
+    "title": "2. The 5-Layer Core Competency Stack",
+    "summary": "Data Foundations, Architecture, Agentic Graph Loops, Infra & Governance",
+    "markdown": "# Chapter 2: The Core Competency Stack & Executive Blueprint\n\nBecoming an end-to-end industry expert in AI requires moving past surface-level prompting and treating AI as an **integrated engineering, data, and product discipline**. The industry splits into five foundational layers:\n\n---\n\n### The 5 Core Competency Layers\n\n| Layer | Focus Areas | Practical Tooling & Frameworks |\n|---|---|---|\n| **1. Data & Math Foundation** | Linear algebra, probability, loss surfaces, data pipelines, embeddings, vector spaces. | `NumPy`, `Pandas`, `PyTorch`, `SQL` |\n| **2. Model Architecture & Fine-Tuning** | Transformer mechanics (Self-Attention, KV Cache), PEFT/LoRA, Quantization (GGUF, AWQ), RLHF/DPO. | `Hugging Face Transformers`, `Unsloth`, `vLLM`, `DeepSpeed` |\n| **3. Agentic Systems & Orchestration** | Tool calling, deterministic workflows, multi-agent coordination, graph execution, memory architectures. | `LangGraph`, `LlamaIndex`, `CrewAI`, `AutoGen`, `LiteLLM` |\n| **4. AI Engineering & Infrastructure** | Vector indexing, hybrid search, caching, tracing, evals, latency/cost optimization, guardrails. | `Pinecone`, `Qdrant`, `pgvector`, `Langfuse`, `Arize Phoenix`, `NeMo` |\n| **5. Product, Risk & Governance** | Trust & safety, hallucination mitigation, cost/token economics, compliance (EU AI Act), UX patterns. | Custom eval suites, `Promptfoo`, `Ragas` |\n\n---\n\n### The Shift: From Prompt Tinkerer to AI Systems Architect\n\nMost practitioners remain stuck at the surface level: tweaking system prompts, relying on closed web UIs, and hoping for deterministic outputs. True industry authority requires mastering the **Full System Loop**:\n\n1. **Deterministic Foundations:** Understanding where rule-based heuristics and SQL outperform stochastic LLMs.\n2. **Deterministic Schemas:** Enforcing Pydantic / JSON Schema contracts before any agent executes an API or database mutation.\n3. **Continuous Benchmarking:** Validating every prompt and model change against an automated evaluation pipeline with synthetic test sets.\n4. **Latency & Compute Budgets:** Optimizing Time-To-First-Token (TTFT) and throughput using continuous batching and quantized weights.\n"
+  },
+  {
+    "id": "ch-03",
+    "title": "3. Attention Mechanisms & Architecture",
+    "summary": "Transformers, Scaled Dot-Product Attention, KV-Caching & LoRA",
+    "markdown": "# Chapter 3: Attention Mechanisms & Transformer Architecture\n\nTo operate as an end-to-end industry expert, you must look past the prompt window and understand how modern Large Language Models (LLMs) operate under the hood.\n\n---\n\n### 1. The Scaled Dot-Product Attention Core\n\nAt the center of every transformer architecture is the attention calculation:\n\n$$\\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$\n\n- **Queries ($Q$):** What the current token is actively searching for.\n- **Keys ($K$):** What prior tokens offer in the contextual horizon.\n- **Values ($V$):** The semantic payload retrieved when Query matches Key.\n- **Scaling Factor $\\sqrt{d_k}$:** Prevents dot products from exploding in high dimensions, which would saturate the softmax into zero-gradient zones.\n\nFor multi-head attention (MHA), the computation expands into $h$ distinct representation subspaces:\n\n$$\\text{MultiHead}(Q, K, V) = \\text{Concat}(\\text{head}_1, \\dots, \\text{head}_h)W^O$$\n\nwhere each head is $\\text{head}_i = \\text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$.\n\n---\n\n### 2. KV Cache & Inference Latency\n\nDuring autoregressive generation (the decoding phase), computing self-attention over previously produced tokens would require repetitive $O(N^2)$ FLOPs.\n\n- **KV Caching:** We store key-value matrices in GPU VRAM (HBM) for past tokens so only the single newest token computes attention against cached state.\n- **The Bottleneck:** Inference is rarely compute-bound; it is **memory bandwidth bound**. Moving the KV cache in and out of GPU registers dictates tokens per second (TPS).\n- **VRAM Formula for KV Cache:**\n\n$$\\text{KV Cache Size (Bytes)} = 2 \\times 2 \\times n_{\\text{layers}} \\times n_{\\text{heads}} \\times d_{\\text{head}} \\times n_{\\text{tokens}} \\times \\text{precision}$$\n\n---\n\n### 3. Parameter-Efficient Fine-Tuning (PEFT / LoRA)\n\nFull-parameter fine-tuning of 70B models requires massive multi-node clusters. **LoRA (Low-Rank Adaptation)** fixes base model weights $W_0$ and trains small rank-decomposition matrices:\n\n$$W = W_0 + \\Delta W = W_0 + \\frac{\\alpha}{r} (B \\times A)$$\n\nwhere $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with rank $r \\ll \\min(d, k)$. \n\n- **Memory Reduction:** Cuts trainable memory requirements by up to 90%.\n- **Zero Latency Penalty:** At inference time, the low-rank delta $\\Delta W$ can be folded directly back into $W_0$.\n"
+  },
+  {
+    "id": "ch-04",
+    "title": "4. Vector Search & Production RAG",
+    "summary": "Chunking, Dense/Sparse Embeddings, Hybrid Search & Rerankers",
+    "markdown": "# Chapter 4: Vector Search & Advanced RAG Pipelines\n\nNaive RAG (chunk $\\rightarrow$ embed $\\rightarrow$ top-k $\\rightarrow$ prompt) degrades rapidly in production environments. Building production-grade retrieval requires a multi-stage approach.\n\n---\n\n### 1. Ingestion & Semantic Chunking\n\n- **Fixed-size Chunking (Fragile):** Arbitrary token limits (e.g., 512 tokens with 50-token overlap) split definitions and table rows across chunk boundaries.\n- **Contextual Chunking:** Prepend parent document metadata or an LLM-generated chunk summary before embedding.\n- **Semantic Window Retrieval:** Index tiny chunks (sentence-level) for precise vector matching, but return the surrounding sliding window of paragraphs to the model context.\n\n---\n\n### 2. Hybrid Retrieval: Dense + Sparse Fusion\n\n- **Dense Vectors (Embeddings):** Understand semantic context, synonyms, and intent (e.g., `text-embedding-3`, `BGE`). Fail at alphanumeric identifiers, order numbers, or strict keyword lookups.\n- **Sparse Vectors (BM25 / SPLADE):** Exact keyword and phrase matchers.\n- **Reciprocal Rank Fusion (RRF):** Combine rankings deterministically:\n\n$$RRF\\_Score(d) = \\sum_{m \\in M} \\frac{1}{k + r_m(d)}$$\n\nwhere $M$ is the set of retrievers (e.g., Dense + BM25), $k \\approx 60$ is a smoothing constant, and $r_m(d)$ is the rank of document $d$ in system $m$.\n\n---\n\n### 3. Cross-Encoder Reranking\n\nVector similarity calculates dot-product angles independently (bi-encoder). Always pass the top 25\u201350 retrieved candidates through a **Cross-Encoder Reranker** (e.g., Cohere Rerank, BGE-Reranker-v2) to calculate true query-passage mutual interaction before injecting into the final context window.\n"
+  },
+  {
+    "id": "ch-05",
+    "title": "5. Stateful Agentic Systems & State Machines",
+    "summary": "Autonomous loops, LangGraph, tool calling & structured execution",
+    "markdown": "# Chapter 5: Stateful Agentic Systems\n\nAutonomous agents transition simple generation into stateful, loop-based execution engines equipped with external tools.\n\n---\n\n### 1. The Anatomy of an Agent Loop\n\n```text\nUser Query -> State Init -> LLM Decision -> Tool Call Needed?\n                                \u2502\n             \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n            YES                                   NO\n             \u25bc                                     \u25bc\n       Execute Tool                        Generate Response\n             \u2502                                     \u2502\n       Append Output                               \u25bc\n             \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500> Update State -> End\n```\n\n---\n\n### 2. Escaping Fragile Prompt Chains\n\nEarly agent frameworks relied on naive text parsing (ReAct prompt scripts). Production agents are constructed as **State Graphs** (e.g., LangGraph):\n\n1. **Nodes:** Plain functions that receive current state, perform an action (invoke model, query SQL DB, execute API), and return an updated partial state.\n2. **Edges:** Conditional routers determining the next node based on structured outputs.\n3. **Checkpointers:** Persisting graph state into Postgres/Redis to support pause/resume, human-in-the-loop approvals, and disaster recovery.\n\n---\n\n### 3. Enforcing Strict JSON Schemas\n\nNever trust raw LLM output for tool execution. Bind function schemas via JSON Schema / Pydantic models. Validate system calls against type signatures before sending payloads to network layers.\n\n```python\nfrom pydantic import BaseModel, Field\n\nclass LedgerAuditAction(BaseModel):\n    account_id: str = Field(description=\"Normalized general ledger account code\")\n    variance_threshold: float = Field(gt=0, le=0.05, description=\"Allowed variance ratio\")\n    flagged_discrepancy: bool\n    evidence_citation_id: str\n```\n"
+  },
+  {
+    "id": "ch-06",
+    "title": "6. Inference Optimization & Serving",
+    "summary": "vLLM, PagedAttention, Speculative Decoding & Quantization",
+    "markdown": "# Chapter 6: Model Serving, Quantization & Latency\n\nServing models at scale requires reducing latency (Time To First Token - TTFT) and maximizing throughput (Tokens Per Second - TPS).\n\n---\n\n### 1. PagedAttention & Continuous Batching\n\nTraditional serving frameworks pre-allocated fixed memory blocks for each request's maximum context length, wasting up to 60-80% of GPU memory.\n\n- **PagedAttention (vLLM):** Allocates memory for keys and values in non-contiguous virtual pages, mirroring modern OS virtual memory paging.\n- **Continuous Batching:** Dynamically inserts incoming requests into active GPU forward passes rather than waiting for an entire batch to finish generation.\n\n---\n\n### 2. Quantization Standards\n\n| Format | Bit Width | Memory Footprint | Primary Use Case |\n|---|---|---|---|\n| **FP16 / BF16** | 16 bits | 2 GB per 1B params | Training & baseline precision |\n| **AWQ / GPTQ** | 4 bits | ~0.65 GB per 1B params | GPU cloud inference at scale |\n| **GGUF** | 4\u20138 bits | Variable | Local CPU/Metal/Edge runtimes |\n\n---\n\n### 3. Speculative Decoding\n\nRun a tiny draft model (e.g., 1B parameter model) to speculatively output candidate tokens in rapid succession. The massive target model (e.g., 70B parameter model) validates all candidate tokens concurrently in a single forward pass, providing a **2x\u20133x speedup with zero mathematical loss in accuracy**.\n"
+  },
+  {
+    "id": "ch-07",
+    "title": "7. Production Evals & Guardrails",
+    "summary": "LLM-as-a-Judge, Synthetic Data, Ragas & Hallucination Audits",
+    "markdown": "# Chapter 7: Automated Evaluations & Security Guardrails\n\nYou cannot improve what you cannot measure. Production AI systems require continuous deterministic and probabilistic evaluation pipelines.\n\n---\n\n### 1. The RAG Triad Metrics\n\n1. **Context Relevance:** Did the retriever fetch chunks strictly relevant to the user query?\n2. **Groundedness / Faithfulness:** Is every claim in the generated answer supported directly by the retrieved context?\n3. **Answer Relevance:** Does the output directly answer the user prompt without tangential fluff?\n\n---\n\n### 2. LLM-as-a-Judge Design Rules\n\nWhen using an LLM to evaluate another LLM:\n- **Calibrate with Few-Shot Rubrics:** Provide explicit 1-5 scoring anchors with annotated historical examples.\n- **Chain of Thought First:** Force the evaluator model to generate reasoning justification before emitting a final score token.\n- **Permutation Invariance:** Swap candidate output orders when running comparative A/B judgements to negate position bias.\n\n---\n\n### 3. Defending Prompt Injections & Jailbreaks\n\n- **Delimiter Sandboxing:** Wrap untrusted user inputs in XML/Markdown blocks and explicitly instruct the model to treat content within those tags strictly as data, never as system instructions.\n- **Dual-Model Guards:** Route ambiguous requests through a lightweight classifier (or guardrail service) that scores adversarial intent before passing inputs to downstream execution tools.\n"
+  },
+  {
+    "id": "ch-08",
+    "title": "8. End-to-End Capstone Project Blueprint",
+    "summary": "Autonomous Financial Ledger Auditor portfolio implementation",
+    "markdown": "# Chapter 8: Production Capstone Project Blueprint\n\nTo demonstrate true industry expertise, construct a reference system integrating all layers of this curriculum.\n\n---\n\n### The System: \"Autonomous Financial Ledger Auditor\"\n\n#### Architecture Specifications:\n1. **Ingestion Service:** Ingests SEC 10-K filings, splits via semantic window chunking, and indexes dense vectors in a vector database alongside BM25 sparse indexes.\n2. **Hybrid Retriever:** Implements Cohere reranking on the top 30 retrieved chunks.\n3. **Stateful Graph Execution:**\n   - **Node A (Planner):** Analyzes the financial audit scope.\n   - **Node B (Tool Executor):** Runs deterministic Python math calculations on extracted balance sheet numbers.\n   - **Node C (Auditor Judge):** Verifies table figures against raw source text citations.\n4. **Guardrail Layer:** Rejects hallucinated calculations where variance is $>0.001\\%$.\n5. **Observability:** Tracks latency, TTFT, and total token cost per run via OpenTelemetry / Langfuse instrumentation.\n\n---\n\n### Recommended Artifacts to Publish:\n- GitHub repository with automated GitHub Actions CI running deterministic eval suites.\n- Live Vercel dashboard showcasing latency and token consumption metrics.\n- Technical write-up highlighting failure edge cases and architectural trade-offs.\n"
+  },
+  {
+    "id": "ch-09",
+    "title": "9. Accelerated Fast-Track Roadmap (60-Day Sprint)",
+    "summary": "Compressing 9 Months into an Intensive 8-Week / 60-Day Execution Sprint",
+    "markdown": "# Chapter 9: The Accelerated Fast-Track Roadmap\n\nThe traditional industry roadmap suggests 9 months (Months 1\u20133 for mechanics, Months 4\u20136 for RAG & agents, Months 7\u20139 for evals & capstone). \n\n**You can compress this entire timeline into an intensive 8-Week (60-Day) Sprint** through deliberate daily practice, focused execution, and pre-built tooling scaffolding.\n\n---\n\n### Accelerated 8-Week Sprint Overview\n\n| Sprint | Duration | Core Goal | Verifiable Deliverable |\n|---|---|---|---|\n| **Sprint 1** | Week 1\u20132 | Attention & Transformer Mechanics from Scratch | Working PyTorch MHA module + tiny autoregressive decoder trained on Shakespeare. |\n| **Sprint 2** | Week 3\u20134 | Hybrid RAG, Ingestion & Fine-Tuning | Production Hybrid RAG pipeline with BM25 + Qdrant + Cohere Reranker, plus QLoRA JSON adapter. |\n| **Sprint 3** | Week 5\u20136 | Stateful Agent Graphs & vLLM Serving | LangGraph multi-tool loop with human-in-the-loop checkpointing and vLLM benchmarking. |\n| **Sprint 4** | Week 7\u20138 | Evals, Guardrails & Capstone Deployment | Deployed Ledger Auditor with Langfuse tracing, Ragas eval CI, and public technical post-mortem. |\n\n---\n\n### The Daily Deliberate Practice Protocol (2 Hours/Day)\n\nTo compress 9 months into 60 days, follow the **30-60-30 Protocol**:\n\n- **30 Mins (Theoretical Deconstruction):** Read paper equations or system architectures (Attention Is All You Need, LoRA paper, vLLM PagedAttention).\n- **60 Mins (Hands-on Code):** Write clean, production-grade Python/TypeScript code. Zero copy-pasting; code the mechanisms line by line.\n- **30 Mins (Proof of Work & Documentation):** Commit changes to GitHub, log latency/eval numbers, and draft technical notes for your post-mortem.\n\n---\n\n### Weekly Sprint Breakdown\n\n#### Weeks 1\u20132: Mechanics over Magic\n- **Day 1\u20134:** Implement scaled dot-product attention and multi-head attention in PyTorch from pure matrix operations.\n- **Day 5\u20138:** Build the KV-cache mechanism in a toy decoder. Benchmark inference latency with and without caching.\n- **Day 9\u201314:** Fine-tune Mistral/Llama using `Unsloth` or `PEFT` on a custom structured output dataset. Verify JSON schema adherence.\n\n#### Weeks 3\u20134: Production Retrieval\n- **Day 15\u201320:** Build a hybrid search index using `pgvector` or `Qdrant` alongside BM25. Implement Reciprocal Rank Fusion (RRF).\n- **Day 21\u201328:** Wire a Cross-Encoder Reranker (`bge-reranker-large` or Cohere API). Benchmark NDCG@10 against naive vector search.\n\n#### Weeks 5\u20136: Stateful Agents & High-Throughput Serving\n- **Day 29\u201335:** Build a LangGraph state machine. Include cyclic loops, structured Pydantic tool schemas, and PostgreSQL state checkpointers.\n- **Day 36\u201342:** Deploy an open model on `vLLM` or `Ollama`. Measure TTFT, TPS, and GPU VRAM consumption across context lengths.\n\n#### Weeks 7\u20138: Evals, Guardrails & Portfolio Launch\n- **Day 43\u201349:** Implement automated eval suites using `Ragas` and `Promptfoo` in GitHub Actions CI.\n- **Day 50\u201356:** Complete the End-to-End Capstone (Autonomous Financial Ledger Auditor) with Langfuse tracing.\n- **Day 57\u201360:** Publish your technical post-mortem and portfolio repository to GitHub and Vercel!\n"
+  },
+  {
+    "id": "ch-10",
+    "title": "10. The 'Build in Public' Portfolio Playbook",
+    "summary": "Shipping resilient artifacts, failure deep-dives & product-engineering bridges",
+    "markdown": "# Chapter 10: The \"Build in Public\" Portfolio Playbook\n\nTheory without functional artifacts carries little weight in the market. True industry authority comes from proving you can ship resilient, production-ready systems.\n\n---\n\n### 1. The Anatomy of a High-Impact AI Portfolio\n\nDon't just build another generic chatbot. Build an autonomous system that interfaces with real external systems:\n\n1. **A Production Proof of Concept:** Autonomous ledger auditor, real-time risk classification engine, or multi-source synthesis agent.\n2. **Deterministic Evaluation Suites:** Show automated CI test runs tracking groundedness, faithfulness, and regression.\n3. **Observability Dashboards:** Include live telemetry screenshots showing TTFT, token cost per transaction, and latency profiles.\n\n---\n\n### 2. How to Write High-Credibility Technical Post-Mortems\n\nTop engineering teams hire practitioners who understand failure modes. Structure your write-ups using this proven framework:\n\n- **The Problem:** The latency or accuracy failure of the naive baseline (e.g., *\"Why naive RAG returned hallucinated citations in 22% of queries\"*).\n- **The Investigation:** Telemetry traces, attention maps, or vector distribution plots pinpointing the root cause.\n- **The Architectural Fix:** Upgrading to semantic window chunking, cross-encoder reranking, or deterministic math execution nodes.\n- **The Verifiable Results:** Before-and-after benchmarks: 99.4% faithfulness, 42% cost reduction, and 3x TTFT improvement.\n\n---\n\n### 3. The Product-Engineering Bridge\n\nThe strongest AI leaders aren't just researchers or coders; they understand:\n- **Latency vs. Quality Trade-offs:** Knowing when a quantized 8B model matches a 70B model with a 75% latency reduction.\n- **Compute Margins:** Calculating unit economics per user session before scaling.\n- **Deterministic Superiority:** Knowing where a traditional rule-based algorithm or SQL join beats an LLM every time.\n"
+  }
+]];
 
     // App State Management
     let currentIdx = 0;

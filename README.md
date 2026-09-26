@@ -38,12 +38,13 @@ A mobile-first, chapter-based interactive course reader and playbook engineered 
 
 ```text
 ai-handbook/
-├── index.html       # Full mobile-first reader with KaTeX, Lucide, and 9 course chapters
-├── manifest.json    # Progressive Web App (PWA) manifest configuration
-├── package.json     # Project definition and static serve scripts
-├── sw.js            # Offline service worker cache engine
-├── vercel.json      # Production Vercel headers and clean routing
-└── README.md        # Documentation and deployment guide
+├── chapter_01_foundations.md # Standalone deep dive on Tensors, Tokenization & Latent Space
+├── index.html                # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
+├── manifest.json             # Progressive Web App (PWA) manifest configuration
+├── package.json              # Project definition and static serve scripts
+├── sw.js                     # Offline service worker cache engine
+├── vercel.json               # Production Vercel headers and clean routing
+└── README.md                 # Documentation and deployment guide
 ```
 
 ---
@@ -52,12 +53,9 @@ ai-handbook/
 
 1. Push this repository to GitHub:
    ```bash
-   git init
    git add .
    git commit -m "feat: complete mobile ai handbook reader with accelerated roadmap"
-   git branch -M main
-   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/ai-handbook.git
-   git push -u origin main
+   git push origin main
    ```
 
 2. Open [vercel.com](https://vercel.com) and log in.
@@ -86,15 +84,16 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 
 ## 📖 Complete Curriculum Overview
 
-- **Chapter 1:** The 5-Layer Core Competency Stack & Executive Blueprint
-- **Chapter 2:** Foundational Mechanics & Model Architecture
-- **Chapter 3:** Vector Search & Advanced Production RAG
-- **Chapter 4:** Stateful Agentic Systems & State Machines
-- **Chapter 5:** Inference Optimization & Serving at Scale
-- **Chapter 6:** Automated Evaluations & Security Guardrails
-- **Chapter 7:** End-to-End Production Capstone Blueprint (*Autonomous Financial Ledger Auditor*)
-- **Chapter 8:** The Accelerated Fast-Track Roadmap (*Compress 9 Months into 60 Days*)
-- **Chapter 9:** The "Build in Public" Portfolio & Technical Post-Mortem Playbook
+- **Chapter 1:** The Mechanical Foundation: Tensors, BBPE Tokenization, $W_E$ Lookups, RoPE & Latent Space Geometry
+- **Chapter 2:** The 5-Layer Core Competency Stack & Executive Blueprint
+- **Chapter 3:** Attention Mechanisms & Transformer Architecture
+- **Chapter 4:** Vector Search & Advanced Production RAG
+- **Chapter 5:** Stateful Agentic Systems & State Machines
+- **Chapter 6:** Inference Optimization & Serving at Scale
+- **Chapter 7:** Production Evals & Guardrails
+- **Chapter 8:** End-to-End Production Capstone Blueprint (*Autonomous Financial Ledger Auditor*)
+- **Chapter 9:** The Accelerated Fast-Track Roadmap (*Compress 9 Months into 60 Days*)
+- **Chapter 10:** The "Build in Public" Portfolio & Technical Post-Mortem Playbook
 
 ---
 
