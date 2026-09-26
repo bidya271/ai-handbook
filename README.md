@@ -99,17 +99,17 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 
 ## 📖 Complete Curriculum Overview
 
-- **Chapter 0:** The SQL-to-AI Rosetta Stone: Universal Concept Translation, Primary Key Lookups to $W_E$ Embeddings, Fuzzy Self-JOINs to Multi-Head Attention & What You Will Understand (with Interactive SQL-to-AI Translation Workbench)
-- **Chapter 1:** The Mechanical Foundation: Tensors, BBPE Tokenization, $W_E$ Lookups, RoPE & Latent Space Geometry
-- **Chapter 2:** The Attention Engine: Projections ($Q, K, V$), Scaled Dot-Product, GQA & Production KV Cache Math
-- **Chapter 3:** Adaptation & Optimization: Cross-Entropy Loss, AdamW, LoRA, QLoRA (NF4) & DPO Alignment
-- **Chapter 4:** Production RAG & Hybrid Retrieval: Semantic Window Chunking, HNSW/IVF Graphs, BM25 & Cross-Encoder Rerankers
-- **Chapter 5:** Stateful Agentic Systems & Orchestration: Cyclic State Graphs, Pydantic Tool Schemas, Memory Architecture & HITL
-- **Chapter 6:** Serving Engines & High-Throughput Infrastructure: vLLM, PagedAttention, Continuous Batching, AWQ/FP8 & Latency SLAs (with Interactive Roofline Sizing Simulator)
-- **Chapter 7:** Production Evals, Safety & Enterprise Governance: The RAG Triad, LLM-as-a-Judge, Dual Guardrails & EU AI Act (with Interactive NLI Proposition Auditor)
-- **Chapter 8:** Capstone Architecture: Autonomous Financial Risk & Compliance Auditor (with Interactive End-to-End Audit Workbench & HITL Simulator)
-- **Chapter 9:** The Accelerated Fast-Track Roadmap: The 30-60-30 Protocol, 4 Gate Milestones & 60-Day Sprint (with Interactive Deliberate Practice Calculator)
-- **Chapter 10:** The "Build in Public" Portfolio & Technical Post-Mortem Playbook: 4 Tier-1 Artifacts, Root Cause Analysis & Staff Whiteboard Defense (with Interactive Portfolio Readiness Scorecard)
+- **Chapter 0:** The SQL-to-AI Guide: Zero-to-One for Beginners (with Interactive SQL-to-AI Translation Workbench)
+- **Chapter 1:** The Mechanical Foundation: Tensors, Embeddings and Latent Space
+- **Chapter 2:** The Attention Engine: Projections, Scaled Dot-Product, GQA and Production KV Cache Math
+- **Chapter 3:** Adaptation and Optimization: Cross-Entropy Loss, AdamW, LoRA, QLoRA (NF4) and DPO Alignment
+- **Chapter 4:** Production RAG and Hybrid Retrieval: Semantic Window Chunking, HNSW/IVF Graphs, BM25 and Cross-Encoder Rerankers
+- **Chapter 5:** Stateful Agentic Systems: Cyclic State Graphs, Pydantic Tool Schemas, Memory and HITL
+- **Chapter 6:** Serving Engines and High-Throughput Infrastructure: vLLM, PagedAttention, Continuous Batching and Latency SLAs
+- **Chapter 7:** Production Evals, Safety and Governance: The RAG Triad, LLM-as-a-Judge and the EU AI Act
+- **Chapter 8:** Capstone Project: Autonomous Financial Risk and Compliance Auditor
+- **Chapter 9:** The Fast-Track Roadmap: The 30-60-30 Protocol, 4 Gate Milestones and 60-Day Sprint
+- **Chapter 10:** The Portfolio Playbook: 4 Core Projects, Root Cause Analysis and Whiteboard Defense
 
 ---
 

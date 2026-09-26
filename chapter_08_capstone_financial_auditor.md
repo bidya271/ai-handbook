@@ -1,4 +1,4 @@
-# CHAPTER 8: Capstone Architecture — The Autonomous Financial Risk & Compliance Auditor
+# CHAPTER 8: Capstone Project: The Autonomous Financial Risk and Compliance Auditor
 
 ## 8.1 System Blueprint & Architectural Scope
 

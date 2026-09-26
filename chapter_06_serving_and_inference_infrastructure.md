@@ -1,4 +1,4 @@
-# CHAPTER 6: Serving Engines & High-Throughput Infrastructure — vLLM, PagedAttention, Continuous Batching & Quantization
+# CHAPTER 6: Serving Engines and High-Throughput Infrastructure: vLLM, PagedAttention, Continuous Batching and Quantization
 
 ## 6.1 Architectural Overview & Layer Scope
 
@@ -120,7 +120,7 @@ PHYSICAL VRAM:     [ Phys Block 2 ]  [ Phys Block 7 ]  [ Phys Block 91 ]
 4. **Zero Internal Fragmentation:** Memory is allocated only when a block fills up. Waste is restricted strictly to the final incomplete block ($< 16$ tokens).
 
 ### 6.3.3 Copy-on-Write (CoW) Memory Sharing
-When executing workflows that share identical prompt prefixes—such as system prompts, few-shot examples, or parallel generation branches—PagedAttention maps multiple logical prompts to the **exact same physical KV blocks**:
+When executing workflows that share identical prompt prefixes (such as system prompts, few-shot examples, or parallel generation branches), PagedAttention maps multiple logical prompts to the **exact same physical KV blocks**:
 
 ```text
 Prompt A: System Instructions (500 tokens) + Query A
@@ -183,7 +183,7 @@ INT4 (Integer): [ 4 Bits: Represents integer index mapped to a scale factor ] (0
 #### 1. AWQ (Activation-aware Weight Quantization):
 - **Insight:** Not all weights in a network are equally important. Looking at the magnitude of activations flowing through the model reveals that **only 0.1% to 1% of channels dictate output quality**.
 - **Mechanism:** AWQ identifies these salient channels and protects them from aggressive quantization by calculating channel-specific scaling factors. The remaining weights are compressed to 4-bit integers.
-- **Hardware Target:** Cloud GPU deployment (vLLM, TensorRT-LLM) using specialized 4-bit matrix multiplication kernels (`W4A16` — 4-bit weights, 16-bit activations).
+- **Hardware Target:** Cloud GPU deployment (vLLM, TensorRT-LLM) using specialized 4-bit matrix multiplication kernels (`W4A16`, meaning 4-bit weights and 16-bit activations).
 
 #### 2. GPTQ (Generalized Post-Training Quantization):
 - **Mechanism:** GPTQ uses second-order Taylor expansions (the Hessian matrix of the loss surface) to quantize weights layer-by-layer, adjusting unquantized weights in the same layer to compensate for the mathematical error introduced by the quantized ones.

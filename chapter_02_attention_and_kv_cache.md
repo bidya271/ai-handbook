@@ -1,4 +1,4 @@
-# CHAPTER 2: The Attention Engine — Projections, Scaled Dot-Product, GQA & KV-Cache Sizing
+# CHAPTER 2: The Attention Engine: Projections, Scaled Dot-Product, GQA and KV-Cache Sizing
 
 ## 2.1 Architectural Overview & Layer Scope
 
@@ -85,7 +85,7 @@ Each entry $(i, j)$ in this matrix represents the unnormalized dot product betwe
 
 $$A_{\text{raw}}[i, j] = \sum_{m=1}^{d_k} Q[i, m] \cdot K[j, m]$$
 
-### 2.3.2 Step 2: The Scaling Factor ($\frac{1}{\sqrt{d_k}}$) — Why It Matters
+### 2.3.2 Step 2: The Scaling Factor ($\frac{1}{\sqrt{d_k}}$): Why It Matters
 
 Why do we divide by the square root of the head dimension ($d_k$)?
 

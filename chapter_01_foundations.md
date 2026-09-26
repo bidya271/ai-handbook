@@ -1,4 +1,4 @@
-# CHAPTER 1: The Mechanical Foundation — Tensors, Tokenization, Embeddings & Geometric Latent Space
+# CHAPTER 1: The Mechanical Foundation: Tensors, Tokenization, Embeddings and Latent Space
 
 ## 1.1 Architectural Overview & Layer Scope
 
@@ -19,7 +19,7 @@ flowchart TD
     class F endNode;
 ```
 
-Every concept in this module is cross-referenced with relational data engineering and linear algebra primitives.
+Every concept in this module is cross-referenced with relational data engineering and basic linear algebra concepts.
 
 ---
 
@@ -119,7 +119,7 @@ Row 99999: [ -0.003,  0.781, ...,  0.002 ]
 #### Physical Hardware Reality (The SQL Join Equivalence):
 In physical GPU execution, you **never** instantiate a one-hot vector of size 128,000 to perform a matrix multiplication; doing so would waste billions of operations multiplying by zero.
 
-Instead, the operation is executed as an **$O(1)$ memory offset lookup**—the identical algorithmic mechanism of a primary-key index scan in relational engines:
+Instead, the operation is executed as an **$O(1)$ memory offset lookup**, which works just like a primary-key index scan in a SQL database:
 
 $$\text{Memory Address}(\vec{e}_i) = \text{Base Address}(W_E) + (t_i \times d_{\text{model}} \times \text{SizeOf}(\text{Float16}))$$
 

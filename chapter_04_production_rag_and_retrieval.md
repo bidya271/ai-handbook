@@ -1,4 +1,4 @@
-# CHAPTER 4: Production RAG & Hybrid Retrieval — Chunking, Vector Indexing (HNSW/IVF), BM25 & Cross-Encoders
+# CHAPTER 4: Production RAG and Hybrid Retrieval: Chunking, Vector Indexing (HNSW/IVF), BM25 and Cross-Encoders
 
 ## 4.1 Architectural Overview & Layer Scope
 
@@ -74,7 +74,7 @@ Semantic Window Retrieval Pattern:
 
 ---
 
-## 4.3 Vector Indexing Primitives: Approximate Nearest Neighbors (ANN)
+## 4.3 Vector Indexing Building Blocks: Approximate Nearest Neighbors (ANN)
 
 Once chunks are converted into unit vectors $\vec{v} \in \mathbb{R}^{d}$, calculating exact nearest neighbors via brute-force flat search requires computing the cosine distance across every record in the database:
 $$\text{Brute Force Time Complexity} = O(N \times d)$$

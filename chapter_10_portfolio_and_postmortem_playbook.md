@@ -7,7 +7,7 @@ Theory without functional, reproducible artifacts carries zero weight in product
 Senior AI Architects, Staff Engineers, and Engineering Directors look for a distinct standard: **Production Proof-of-Work**. 
 
 Production Proof-of-Work demonstrates that an engineer understands what happens beneath high-level abstractions:
-1. **Mathematical Grounding:** You can derive self-attention variance, RoPE coordinate rotations, and cross-entropy loss from linear algebra primitives.
+1. **Mathematical Grounding:** You can derive self-attention variance, RoPE coordinate rotations, and cross-entropy loss from basic linear algebra.
 2. **Hardware & Resource Consciousness:** You size inference infrastructure using memory bandwidth roofline models, calculate KV cache VRAM per token, and prevent CUDA out-of-memory cascades.
 3. **Resilience & Determinism:** You treat foundation models as probabilistic components inside deterministic state graphs with strict Pydantic data contracts and self-correction loops.
 4. **Failure Transparency:** You document architectural breakdowns, performance bottlenecks, and incident root-cause analyses (RCAs) with engineering rigor.
@@ -79,7 +79,7 @@ flowchart LR
   - Cross-Encoder reranking pipeline with P95 latency capped below 350ms.
 - **Benchmark Included:** Mean Reciprocal Rank (MRR@10) and Normalized Discounted Cumulative Gain (NDCG@10) comparing Dense-only, Sparse-only, and Hybrid RRF.
 
-### Artifact 4: Enterprise Capstone — The Autonomous Risk & Compliance Auditor
+### Artifact 4: Enterprise Capstone: The Autonomous Risk & Compliance Auditor
 - **Core Technology:** LangGraph, PostgreSQL (State Checkpointing), Pydantic v2, vLLM / Ollama, OpenTelemetry, Ragas.
 - **Key Deliverables:**
   - Cyclic state graph containing Supervisor, Tool Executor, and NLI Evaluator nodes.

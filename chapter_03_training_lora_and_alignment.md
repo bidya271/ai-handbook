@@ -1,4 +1,4 @@
-# CHAPTER 3: Adaptation & Optimization — Loss Functions, Backpropagation, LoRA/QLoRA & Preference Alignment
+# CHAPTER 3: Adaptation and Optimization: Loss Functions, Backpropagation, LoRA, QLoRA and Preference Alignment
 
 ## 3.1 Architectural Overview & Layer Scope
 
@@ -105,7 +105,7 @@ Why can you not simply run full backpropagation on an open-source 70B model usin
 | **AdamW Optimizer State: Momentum ($m_t$)** | `FP32` | **4 Bytes** |
 | **AdamW Optimizer State: Variance ($v_t$)** | `FP32` | **4 Bytes** |
 | **FP32 Master Weight Copy** (to avoid precision loss) | `FP32` | **4 Bytes** |
-| **Total Static Memory Overhead** | — | **16 Bytes per Parameter** |
+| **Total Static Memory Overhead** | Total | **16 Bytes per Parameter** |
 
 ### The 70-Billion Parameter Math:
 $$\text{Static VRAM} = 70 \times 10^9 \text{ parameters} \times 16 \text{ Bytes} = \mathbf{1,120 \text{ GB of VRAM}}$$

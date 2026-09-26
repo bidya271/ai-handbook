@@ -1,4 +1,4 @@
-# CHAPTER 5: Stateful Agentic Systems & Orchestration — State Graphs, Deterministic Tools, Pydantic Schemas & Human-in-the-Loop
+# CHAPTER 5: Stateful Agentic Systems: State Graphs, Deterministic Tools, Pydantic Schemas and Human-in-the-Loop
 
 ## 5.1 Architectural Overview & Layer Scope
 
@@ -46,11 +46,11 @@ $$\text{Input} \longrightarrow \text{Step } 1 \longrightarrow \text{Step } 2 \lo
 3. **Unbounded Context Accumulation:** Passing full conversational history through each sequential step exhausts context limits and increases inference costs.
 
 ### 5.2.2 The State Graph Architecture (LangGraph Pattern)
-Modern production agents are built as **Cyclic State Machines**. A state machine consists of three formal primitives:
+Modern production agents are built as **Cyclic State Machines**. A state machine consists of three main parts:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        STATE GRAPH PRIMITIVES                          │
+│                        STATE GRAPH BUILDING BLOCKS                          │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 1. State: The unified schema representing current system reality       │
 │ 2. Nodes: Deterministic Python functions that transform state          │

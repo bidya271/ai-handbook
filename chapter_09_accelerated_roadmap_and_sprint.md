@@ -1,4 +1,4 @@
-# CHAPTER 9: The Accelerated Fast-Track Roadmap — The 60-Day / 8-Week AI Engineering Hyper-Sprint
+# CHAPTER 9: The Accelerated Fast-Track Roadmap: The 60-Day AI Engineering Hyper-Sprint
 
 ## 9.1 Architectural Overview & Sprint Philosophy
 
@@ -6,9 +6,9 @@ Traditional academic or corporate training paths allocate **9 to 12 months** to 
 
 The **Accelerated Fast-Track Roadmap** compresses this trajectory into an aggressive, intensive **8-Week (60-Day) Hyper-Sprint**. This compression is achieved through three core engineering principles:
 
-1. **First-Principles Implementation (Zero Black-Box Wrappers):** You do not start by importing high-level abstractions like LangChain or AutoTrain. You construct tokenizers, scaled dot-product attention, LoRA projection layers, and state machines from bare mathematical primitives in PyTorch and Python.
+1. **First-Principles Implementation (Zero Black-Box Wrappers):** You do not start by importing high-level abstractions like LangChain or AutoTrain. You construct tokenizers, scaled dot-product attention, LoRA projection layers, and state machines from basic math and clean code in PyTorch and Python.
 2. **The 30-60-30 Daily Deliberate Practice Protocol:** Every single working day is divided into three non-negotiable operational blocks totaling 2 hours of focused output.
-3. **Verifiable Gate Milestones (Exit Criteria):** Progression between sprint phases is gated by automated test suites and production deployments—not by hours watched or chapters read.
+3. **Verifiable Gate Milestones (Exit Criteria):** Progression between sprint phases is gated by automated test suites and production deployments, not by hours watched or chapters read.
 
 ```mermaid
 flowchart TD
@@ -160,7 +160,7 @@ Target Infrastructure: PostgreSQL with pgvector, Python 3.11+, LangGraph
 | **Day 33** | **Reciprocal Rank Fusion (RRF) Pipeline** | Code the RRF aggregation algorithm: $\text{RRF}(d) = \sum_{m \in M} \frac{1}{k + r_m(d)}$ with $k=60$. Combine Top-40 dense and Top-40 sparse candidates into Top-25 fused results. |
 | **Day 34** | **Cross-Encoder Reranking Optimization** | Deploy a cross-encoder reranker (`bge-reranker-large`). Benchmark latency tradeoffs: reranking Top-25 vs. Top-100 candidates to maintain P99 latency below 350ms. |
 | **Day 35** | **Lost-in-the-Middle Context Packing** | Implement context injection ordering: place the highest-scoring reranked chunks at the extreme beginning and extreme end of the prompt window to maximize attention weights. |
-| **Day 36** | **State Graph Primitives & Schema Contracts** | Define an agent state schema using `TypedDict` and Pydantic models. Implement append-only reducer operations (`Annotated[List, operator.add]`). |
+| **Day 36** | **State Graph Core Parts & Schema Contracts** | Define an agent state schema using `TypedDict` and Pydantic models. Implement append-only reducer operations (`Annotated[List, operator.add]`). |
 | **Day 37** | **Deterministic Tool Sandboxing** | Implement isolated tool functions with strict Pydantic inputs/outputs. Disallow all arbitrary Python `eval()` executions in favor of deterministic scalar logic. |
 | **Day 38** | **Cyclic State Graph Construction** | Build a cyclic LangGraph state machine: Planner Node $\rightarrow$ Tool Execution Node $\rightarrow$ Evaluation Node. Connect conditional edges for autonomous error recovery. |
 | **Day 39** | **PostgreSQL State Checkpoint Ledger** | Connect a PostgreSQL checkpointer (`agent_checkpoints`). Verify that agent state is persisted immutably after every node execution for session replay. |
@@ -225,7 +225,7 @@ When undergoing an intensive 60-day sprint, you will inevitably hit cognitive an
 
 ## 9.8 Chapter Summary Checkpoint
 
-1. **The 60-Day Sprint** succeeds by eliminating black-box wrappers and building from raw mathematical and tensor primitives.
+1. **The 60-Day Sprint** succeeds by eliminating black-box wrappers and building from clean math and basic tensor operations.
 2. **The 30-60-30 Protocol** balances theoretical deconstruction (30m), hands-on line-by-line implementation (60m), and verifiable benchmark logging (30m).
 3. **Four Verifiable Gate Milestones** enforce mastery:
    - *Gate 1 (Day 14):* Bare-metal Decoder-only Transformer in PyTorch.

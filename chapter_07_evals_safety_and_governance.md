@@ -1,4 +1,4 @@
-# CHAPTER 7: Production Evals, Observability & Enterprise Governance — The RAG Triad, LLM-as-a-Judge, Adversarial Defense & The EU AI Act
+# CHAPTER 7: Production Evals, Observability and Enterprise Governance: The RAG Triad, LLM-as-a-Judge and the EU AI Act
 
 ## 7.1 Architectural Overview & Layer Scope
 
