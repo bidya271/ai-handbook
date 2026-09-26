@@ -38,16 +38,17 @@ A mobile-first, chapter-based interactive course reader and playbook engineered 
 
 ```text
 ai-handbook/
-├── chapter_01_foundations.md                # Standalone deep dive on Tensors, Tokenization & Latent Space
-├── chapter_02_attention_and_kv_cache.md      # Standalone deep dive on Attention, GQA & KV-Cache Sizing
-├── chapter_03_training_lora_and_alignment.md # Standalone deep dive on Loss, AdamW, LoRA/QLoRA & DPO
-├── chapter_04_production_rag_and_retrieval.md# Standalone deep dive on Chunking, HNSW/IVF, BM25 & Rerankers
-├── index.html                               # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
-├── manifest.json                            # Progressive Web App (PWA) manifest configuration
-├── package.json                             # Project definition and static serve scripts
-├── sw.js                                    # Offline service worker cache engine
-├── vercel.json                              # Production Vercel headers and clean routing
-└── README.md                                # Documentation and deployment guide
+├── chapter_01_foundations.md                     # Standalone deep dive on Tensors, Tokenization & Latent Space
+├── chapter_02_attention_and_kv_cache.md           # Standalone deep dive on Attention, GQA & KV-Cache Sizing
+├── chapter_03_training_lora_and_alignment.md      # Standalone deep dive on Loss, AdamW, LoRA/QLoRA & DPO
+├── chapter_04_production_rag_and_retrieval.md     # Standalone deep dive on Chunking, HNSW/IVF, BM25 & Rerankers
+├── chapter_05_agentic_systems_and_orchestration.md# Standalone deep dive on State Graphs, Tools, Memory & HITL
+├── index.html                                    # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
+├── manifest.json                                 # Progressive Web App (PWA) manifest configuration
+├── package.json                                  # Project definition and static serve scripts
+├── sw.js                                         # Offline service worker cache engine
+├── vercel.json                                   # Production Vercel headers and clean routing
+└── README.md                                     # Documentation and deployment guide
 ```
 
 ---
@@ -91,7 +92,7 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 - **Chapter 2:** The Attention Engine: Projections ($Q, K, V$), Scaled Dot-Product, GQA & Production KV Cache Math
 - **Chapter 3:** Adaptation & Optimization: Cross-Entropy Loss, AdamW, LoRA, QLoRA (NF4) & DPO Alignment
 - **Chapter 4:** Production RAG & Hybrid Retrieval: Semantic Window Chunking, HNSW/IVF Graphs, BM25 & Cross-Encoder Rerankers
-- **Chapter 5:** Stateful Agentic Systems & State Machines
+- **Chapter 5:** Stateful Agentic Systems & Orchestration: Cyclic State Graphs, Pydantic Tool Schemas, Memory Architecture & HITL
 - **Chapter 6:** Inference Optimization & Serving at Scale
 - **Chapter 7:** Production Evals & Guardrails
 - **Chapter 8:** End-to-End Production Capstone Blueprint (*Autonomous Financial Ledger Auditor*)
