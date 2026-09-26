@@ -1,0 +1,22 @@
+{
+  "short_name": "AIMastery",
+  "name": "AI Mastery: Field Guide & Accelerated Playbook",
+  "description": "Mobile-first interactive course reader for modern AI engineering, agentic systems, and accelerated mastery.",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/artificial-intelligence.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/artificial-intelligence.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "display": "standalone",
+  "orientation": "portrait"
+}

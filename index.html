@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI Mastery: Field Guide & Accelerated Playbook</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AIMastery">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/artificial-intelligence.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Marked.js Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- KaTeX for Beautiful Math Formula Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca'
+            },
+            cardDark: '#111827',
+            bgDark: '#090d16',
+            cardLight: '#ffffff',
+            bgLight: '#f8fafc'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Mobile-optimized reading typography */
+    .prose h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+    .prose h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(156, 163, 175, 0.2);
+    }
+    .prose h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 1.25rem;
+      margin-bottom: 0.4rem;
+    }
+    .prose p {
+      margin-bottom: 0.95rem;
+      line-height: 1.72;
+      font-size: 0.98rem;
+    }
+    .prose ul, .prose ol {
+      margin-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .prose li {
+      margin-bottom: 0.4rem;
+      line-height: 1.65;
+    }
+    .prose code:not(pre code) {
+      background: rgba(99, 102, 241, 0.15);
+      color: #6366f1;
+      padding: 0.18rem 0.35rem;
+      border-radius: 0.25rem;
+      font-size: 0.86em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .dark .prose code:not(pre code) {
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.2);
+    }
+    .prose pre {
+      position: relative;
+      background: #030712;
+      color: #e5e7eb;
+      padding: 1rem;
+      border-radius: 0.6rem;
+      overflow-x: auto;
+      margin-top: 0.75rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #1f2937;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .prose pre code {
+      background: transparent !important;
+      padding: 0 !important;
+      color: inherit;
+    }
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      display: block;
+    }
+    .prose th, .prose td {
+      border: 1px solid #374151;
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+    }
+    .prose th {
+      background: #1f2937;
+      color: #f3f4f6;
+      font-weight: 600;
+    }
+    .prose blockquote {
+      border-left: 4px solid #6366f1;
+      padding: 0.5rem 0 0.5rem 1rem;
+      margin: 1.2rem 0;
+      font-style: italic;
+      background: rgba(99, 102, 241, 0.05);
+      border-radius: 0 0.375rem 0.375rem 0;
+    }
+    .dark .prose blockquote {
+      color: #cbd5e1;
+    }
+
+    /* KaTeX equation display adjustments */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0.5rem 0;
+      margin: 0.75rem 0 !important;
+    }
+
+    /* Copy code button */
+    .copy-code-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.375rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      color: #d1d5db;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-code-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="bg-bgLight text-gray-800 dark:bg-bgDark dark:text-gray-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200 min-h-screen flex flex-col font-sans">
+
+  <!-- Fixed Top Mobile Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-bgDark/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between shadow-sm">
+    <button id="menu-btn" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-all" aria-label="Open Syllabus">
+      <i data-lucide="menu" class="w-6 h-6"></i>
+    </button>
+    
+    <div class="flex flex-col text-center cursor-pointer" onclick="toggleDrawer(true)">
+      <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600 dark:text-brand-400" id="current-chapter-pill">Chapter 1 of 9</span>
+      <span class="text-sm font-extrabold truncate max-w-[190px] sm:max-w-md text-gray-900 dark:text-white" id="nav-title">Course Overview</span>
+    </div>
+
+    <div class="flex items-center gap-1">
+      <button id="font-btn" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95" title="Change Font Size">
+        <i data-lucide="type" class="w-5 h-5"></i>
+      </button>
+      <button id="theme-btn" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95" title="Toggle Theme">
+        <i data-lucide="moon" id="theme-icon" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Reading Progress Bar -->
+  <div class="fixed top-[57px] left-0 h-1 bg-brand-500 z-50 transition-all duration-100" id="scroll-progress" style="width: 0%;"></div>
+
+  <!-- Off-Canvas Sidebar / Chapter Drawer -->
+  <div id="drawer-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300"></div>
+  <aside id="drawer" class="fixed top-0 bottom-0 left-0 w-[85%] max-w-[340px] bg-white dark:bg-cardDark z-50 transform -translate-x-full transition-transform duration-300 flex flex-col shadow-2xl border-r border-gray-200 dark:border-gray-800">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i data-lucide="sparkles" class="text-brand-500 w-5 h-5"></i>
+        <h2 class="font-bold text-base text-gray-900 dark:text-white">AI Mastery Syllabus</h2>
+      </div>
+      <button id="drawer-close" class="p-1 rounded-md text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Chapter Search Bar -->
+    <div class="p-3 border-b border-gray-200 dark:border-gray-800">
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-2.5"></i>
+        <input id="search-input" type="text" placeholder="Search chapters, topics, tools..." class="w-full bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/60 rounded-lg pl-9 pr-3 py-1.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-brand-500">
+      </div>
+    </div>
+
+    <!-- Chapter List Navigation -->
+    <nav class="flex-1 overflow-y-auto p-3 space-y-1.5" id="chapters-list"></nav>
+
+    <!-- Drawer Footer -->
+    <div class="p-3.5 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
+      <span class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+        <span id="pwa-status">PWA Offline Ready</span>
+      </span>
+      <span id="completed-count" class="font-semibold text-brand-600 dark:text-brand-400">0/9 Done</span>
+    </div>
+  </aside>
+
+  <!-- Main Content Reading Area -->
+  <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
+    <!-- Chapter Metadata Bar -->
+    <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+      <span id="chapter-read-time" class="flex items-center gap-1">
+        <i data-lucide="clock" class="w-3.5 h-3.5"></i> 5 min read
+      </span>
+      <span id="chapter-status-pill" class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">In Progress</span>
+    </div>
+
+    <!-- Article Content -->
+    <article id="article-body" class="prose dark:prose-invert max-w-none"></article>
+
+    <!-- Chapter Navigation Footer -->
+    <div class="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between gap-3">
+      <button id="prev-btn" class="flex-1 py-2.5 px-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-gray-700 dark:text-gray-200">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i> Prev Chapter
+      </button>
+
+      <button id="mark-btn" class="p-2.5 px-4 rounded-xl border border-emerald-600/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 active:scale-95 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
+        <i data-lucide="check-circle" class="w-4 h-4"></i> Mark Done
+      </button>
+
+      <button id="next-btn" class="flex-1 py-2.5 px-3 rounded-xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all shadow-md">
+        Next Chapter <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </main>
+
+  <script>
+    // Embedded Complete Syllabus Content (9 Comprehensive Chapters)
+    const CHAPTERS = [
+      {
+        id: "ch-00",
+        title: "1. The 5-Layer Core Competency Stack",
+        summary: "Data Foundations, Architecture, Agentic Graph Loops, Infra & Governance",
+        markdown: `
+# Chapter 1: The Core Competency Stack & Executive Blueprint
+
+Becoming an end-to-end industry expert in AI requires moving past surface-level prompting and treating AI as an **integrated engineering, data, and product discipline**. The industry splits into five foundational layers:
+
+---
+
+### The 5 Core Competency Layers
+
+| Layer | Focus Areas | Practical Tooling & Frameworks |
+|---|---|---|
+| **1. Data & Math Foundation** | Linear algebra, probability, loss surfaces, data pipelines, embeddings, vector spaces. | \`NumPy\`, \`Pandas\`, \`PyTorch\`, \`SQL\` |
+| **2. Model Architecture & Fine-Tuning** | Transformer mechanics (Self-Attention, KV Cache), PEFT/LoRA, Quantization (GGUF, AWQ), RLHF/DPO. | \`Hugging Face Transformers\`, \`Unsloth\`, \`vLLM\`, \`DeepSpeed\` |
+| **3. Agentic Systems & Orchestration** | Tool calling, deterministic workflows, multi-agent coordination, graph execution, memory architectures. | \`LangGraph\`, \`LlamaIndex\`, \`CrewAI\`, \`AutoGen\`, \`LiteLLM\` |
+| **4. AI Engineering & Infrastructure** | Vector indexing, hybrid search, caching, tracing, evals, latency/cost optimization, guardrails. | \`Pinecone\`, \`Qdrant\`, \`pgvector\`, \`Langfuse\`, \`Arize Phoenix\`, \`NeMo\` |
+| **5. Product, Risk & Governance** | Trust & safety, hallucination mitigation, cost/token economics, compliance (EU AI Act), UX patterns. | Custom eval suites, \`Promptfoo\`, \`Ragas\` |
+
+---
+
+### The Shift: From Prompt Tinkerer to AI Systems Architect
+
+Most practitioners remain stuck at the surface level: tweaking system prompts, relying on closed web UIs, and hoping for deterministic outputs. True industry authority requires mastering the **Full System Loop**:
+
+1. **Deterministic Foundations:** Understanding where rule-based heuristics and SQL outperform stochastic LLMs.
+2. **Deterministic Schemas:** Enforcing Pydantic / JSON Schema contracts before any agent executes an API or database mutation.
+3. **Continuous Benchmarking:** Validating every prompt and model change against an automated evaluation pipeline with synthetic test sets.
+4. **Latency & Compute Budgets:** Optimizing Time-To-First-Token (TTFT) and throughput using continuous batching and quantized weights.
+        `
+      },
+      {
+        id: "ch-01",
+        title: "2. Core AI Mechanics & Architecture",
+        summary: "Transformers, Attention Mechanisms, KV-Caching & Tokenomics",
+        markdown: `
+# Chapter 2: Foundational Mechanics & Model Architecture
+
+To operate as an end-to-end industry expert, you must look past the prompt window and understand how modern Large Language Models (LLMs) operate under the hood.
+
+---
+
+### 1. The Scaled Dot-Product Attention Core
+
+At the center of every transformer architecture is the attention calculation:
+
+$$\\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$
+
+- **Queries ($Q$):** What the current token is actively searching for.
+- **Keys ($K$):** What prior tokens offer in the contextual horizon.
+- **Values ($V$):** The semantic payload retrieved when Query matches Key.
+- **Scaling Factor $\\sqrt{d_k}$:** Prevents dot products from exploding in high dimensions, which would saturate the softmax into zero-gradient zones.
+
+For multi-head attention (MHA), the computation expands into $h$ distinct representation subspaces:
+
+$$\\text{MultiHead}(Q, K, V) = \\text{Concat}(\\text{head}_1, \\dots, \\text{head}_h)W^O$$
+
+where each head is $\\text{head}_i = \\text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$.
+
+---
+
+### 2. KV Cache & Inference Latency
+
+During autoregressive generation (the decoding phase), computing self-attention over previously produced tokens would require repetitive $O(N^2)$ FLOPs.
+
+- **KV Caching:** We store key-value matrices in GPU VRAM (HBM) for past tokens so only the single newest token computes attention against cached state.
+- **The Bottleneck:** Inference is rarely compute-bound; it is **memory bandwidth bound**. Moving the KV cache in and out of GPU registers dictates tokens per second (TPS).
+- **VRAM Formula for KV Cache:**
+
+$$\\text{KV Cache Size (Bytes)} = 2 \\times 2 \\times n_{\\text{layers}} \\times n_{\\text{heads}} \\times d_{\\text{head}} \\times n_{\\text{tokens}} \\times \\text{precision}$$
+
+---
+
+### 3. Parameter-Efficient Fine-Tuning (PEFT / LoRA)
+
+Full-parameter fine-tuning of 70B models requires massive multi-node clusters. **LoRA (Low-Rank Adaptation)** fixes base model weights $W_0$ and trains small rank-decomposition matrices:
+
+$$W = W_0 + \\Delta W = W_0 + \\frac{\\alpha}{r} (B \\times A)$$
+
+where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with rank $r \\ll \\min(d, k)$. 
+
+- **Memory Reduction:** Cuts trainable memory requirements by up to 90%.
+- **Zero Latency Penalty:** At inference time, the low-rank delta $\\Delta W$ can be folded directly back into $W_0$.
+        `
+      },
+      {
+        id: "ch-02",
+        title: "3. Vector Search & Production RAG",
+        summary: "Chunking, Dense/Sparse Embeddings, Hybrid Search & Rerankers",
+        markdown: `
+# Chapter 3: Vector Search & Advanced RAG Pipelines
+
+Naive RAG (chunk $\\rightarrow$ embed $\\rightarrow$ top-k $\\rightarrow$ prompt) degrades rapidly in production environments. Building production-grade retrieval requires a multi-stage approach.
+
+---
+
+### 1. Ingestion & Semantic Chunking
+
+- **Fixed-size Chunking (Fragile):** Arbitrary token limits (e.g., 512 tokens with 50-token overlap) split definitions and table rows across chunk boundaries.
+- **Contextual Chunking:** Prepend parent document metadata or an LLM-generated chunk summary before embedding.
+- **Semantic Window Retrieval:** Index tiny chunks (sentence-level) for precise vector matching, but return the surrounding sliding window of paragraphs to the model context.
+
+---
+
+### 2. Hybrid Retrieval: Dense + Sparse Fusion
+
+- **Dense Vectors (Embeddings):** Understand semantic context, synonyms, and intent (e.g., \`text-embedding-3\`, \`BGE\`). Fail at alphanumeric identifiers, order numbers, or strict keyword lookups.
+- **Sparse Vectors (BM25 / SPLADE):** Exact keyword and phrase matchers.
+- **Reciprocal Rank Fusion (RRF):** Combine rankings deterministically:
+
+$$RRF\\_Score(d) = \\sum_{m \\in M} \\frac{1}{k + r_m(d)}$$
+
+where $M$ is the set of retrievers (e.g., Dense + BM25), $k \\approx 60$ is a smoothing constant, and $r_m(d)$ is the rank of document $d$ in system $m$.
+
+---
+
+### 3. Cross-Encoder Reranking
+
+Vector similarity calculates dot-product angles independently (bi-encoder). Always pass the top 25–50 retrieved candidates through a **Cross-Encoder Reranker** (e.g., Cohere Rerank, BGE-Reranker-v2) to calculate true query-passage mutual interaction before injecting into the final context window.
+        `
+      },
+      {
+        id: "ch-03",
+        title: "4. Agentic Systems & State Machines",
+        summary: "Autonomous loops, LangGraph, tool calling & structured execution",
+        markdown: `
+# Chapter 4: Stateful Agentic Systems
+
+Autonomous agents transition simple generation into stateful, loop-based execution engines equipped with external tools.
+
+---
+
+### 1. The Anatomy of an Agent Loop
+
+\`\`\`text
+User Query -> State Init -> LLM Decision -> Tool Call Needed?
+                                │
+             ┌──────────────────┴──────────────────┐
+            YES                                   NO
+             ▼                                     ▼
+       Execute Tool                        Generate Response
+             │                                     │
+       Append Output                               ▼
+             └───────────────────────────────> Update State -> End
+\`\`\`
+
+---
+
+### 2. Escaping Fragile Prompt Chains
+
+Early agent frameworks relied on naive text parsing (ReAct prompt scripts). Production agents are constructed as **State Graphs** (e.g., LangGraph):
+
+1. **Nodes:** Plain functions that receive current state, perform an action (invoke model, query SQL DB, execute API), and return an updated partial state.
+2. **Edges:** Conditional routers determining the next node based on structured outputs.
+3. **Checkpointers:** Persisting graph state into Postgres/Redis to support pause/resume, human-in-the-loop approvals, and disaster recovery.
+
+---
+
+### 3. Enforcing Strict JSON Schemas
+
+Never trust raw LLM output for tool execution. Bind function schemas via JSON Schema / Pydantic models. Validate system calls against type signatures before sending payloads to network layers.
+
+\`\`\`python
+from pydantic import BaseModel, Field
+
+class LedgerAuditAction(BaseModel):
+    account_id: str = Field(description="Normalized general ledger account code")
+    variance_threshold: float = Field(gt=0, le=0.05, description="Allowed variance ratio")
+    flagged_discrepancy: bool
+    evidence_citation_id: str
+\`\`\`
+        `
+      },
+      {
+        id: "ch-04",
+        title: "5. Inference Optimization & Serving",
+        summary: "vLLM, PagedAttention, Speculative Decoding & Quantization",
+        markdown: `
+# Chapter 5: Model Serving, Quantization & Latency
+
+Serving models at scale requires reducing latency (Time To First Token - TTFT) and maximizing throughput (Tokens Per Second - TPS).
+
+---
+
+### 1. PagedAttention & Continuous Batching
+
+Traditional serving frameworks pre-allocated fixed memory blocks for each request's maximum context length, wasting up to 60-80% of GPU memory.
+
+- **PagedAttention (vLLM):** Allocates memory for keys and values in non-contiguous virtual pages, mirroring modern OS virtual memory paging.
+- **Continuous Batching:** Dynamically inserts incoming requests into active GPU forward passes rather than waiting for an entire batch to finish generation.
+
+---
+
+### 2. Quantization Standards
+
+| Format | Bit Width | Memory Footprint | Primary Use Case |
+|---|---|---|---|
+| **FP16 / BF16** | 16 bits | 2 GB per 1B params | Training & baseline precision |
+| **AWQ / GPTQ** | 4 bits | ~0.65 GB per 1B params | GPU cloud inference at scale |
+| **GGUF** | 4–8 bits | Variable | Local CPU/Metal/Edge runtimes |
+
+---
+
+### 3. Speculative Decoding
+
+Run a tiny draft model (e.g., 1B parameter model) to speculatively output candidate tokens in rapid succession. The massive target model (e.g., 70B parameter model) validates all candidate tokens concurrently in a single forward pass, providing a **2x–3x speedup with zero mathematical loss in accuracy**.
+        `
+      },
+      {
+        id: "ch-05",
+        title: "6. Production Evals & Guardrails",
+        summary: "LLM-as-a-Judge, Synthetic Data, Ragas & Hallucination Audits",
+        markdown: `
+# Chapter 6: Automated Evaluations & Security Guardrails
+
+You cannot improve what you cannot measure. Production AI systems require continuous deterministic and probabilistic evaluation pipelines.
+
+---
+
+### 1. The RAG Triad Metrics
+
+1. **Context Relevance:** Did the retriever fetch chunks strictly relevant to the user query?
+2. **Groundedness / Faithfulness:** Is every claim in the generated answer supported directly by the retrieved context?
+3. **Answer Relevance:** Does the output directly answer the user prompt without tangential fluff?
+
+---
+
+### 2. LLM-as-a-Judge Design Rules
+
+When using an LLM to evaluate another LLM:
+- **Calibrate with Few-Shot Rubrics:** Provide explicit 1-5 scoring anchors with annotated historical examples.
+- **Chain of Thought First:** Force the evaluator model to generate reasoning justification before emitting a final score token.
+- **Permutation Invariance:** Swap candidate output orders when running comparative A/B judgements to negate position bias.
+
+---
+
+### 3. Defending Prompt Injections & Jailbreaks
+
+- **Delimiter Sandboxing:** Wrap untrusted user inputs in XML/Markdown blocks and explicitly instruct the model to treat content within those tags strictly as data, never as system instructions.
+- **Dual-Model Guards:** Route ambiguous requests through a lightweight classifier (or guardrail service) that scores adversarial intent before passing inputs to downstream execution tools.
+        `
+      },
+      {
+        id: "ch-06",
+        title: "7. End-to-End Capstone Project Blueprint",
+        summary: "Autonomous Financial Ledger Auditor portfolio implementation",
+        markdown: `
+# Chapter 7: Production Capstone Project Blueprint
+
+To demonstrate true industry expertise, construct a reference system integrating all layers of this curriculum.
+
+---
+
+### The System: "Autonomous Financial Ledger Auditor"
+
+#### Architecture Specifications:
+1. **Ingestion Service:** Ingests SEC 10-K filings, splits via semantic window chunking, and indexes dense vectors in a vector database alongside BM25 sparse indexes.
+2. **Hybrid Retriever:** Implements Cohere reranking on the top 30 retrieved chunks.
+3. **Stateful Graph Execution:**
+   - **Node A (Planner):** Analyzes the financial audit scope.
+   - **Node B (Tool Executor):** Runs deterministic Python math calculations on extracted balance sheet numbers.
+   - **Node C (Auditor Judge):** Verifies table figures against raw source text citations.
+4. **Guardrail Layer:** Rejects hallucinated calculations where variance is $>0.001\\%$.
+5. **Observability:** Tracks latency, TTFT, and total token cost per run via OpenTelemetry / Langfuse instrumentation.
+
+---
+
+### Recommended Artifacts to Publish:
+- GitHub repository with automated GitHub Actions CI running deterministic eval suites.
+- Live Vercel dashboard showcasing latency and token consumption metrics.
+- Technical write-up highlighting failure edge cases and architectural trade-offs.
+        `
+      },
+      {
+        id: "ch-07",
+        title: "8. Accelerated Fast-Track Roadmap (Beat the 9-Month Timeline)",
+        summary: "Compressing 9 Months into an Intensive 8-Week / 60-Day Execution Sprint",
+        markdown: `
+# Chapter 8: The Accelerated Fast-Track Roadmap
+
+The traditional industry roadmap suggests 9 months (Months 1–3 for mechanics, Months 4–6 for RAG & agents, Months 7–9 for evals & capstone). 
+
+**You can compress this entire timeline into an intensive 8-Week (60-Day) Sprint** through deliberate daily practice, focused execution, and pre-built tooling scaffolding.
+
+---
+
+### Accelerated 8-Week Sprint Overview
+
+| Sprint | Duration | Core Goal | Verifiable Deliverable |
+|---|---|---|---|
+| **Sprint 1** | Week 1–2 | Attention & Transformer Mechanics from Scratch | Working PyTorch MHA module + tiny autoregressive decoder trained on Shakespeare. |
+| **Sprint 2** | Week 3–4 | Hybrid RAG, Ingestion & Fine-Tuning | Production Hybrid RAG pipeline with BM25 + Qdrant + Cohere Reranker, plus QLoRA JSON adapter. |
+| **Sprint 3** | Week 5–6 | Stateful Agent Graphs & vLLM Serving | LangGraph multi-tool loop with human-in-the-loop checkpointing and vLLM benchmarking. |
+| **Sprint 4** | Week 7–8 | Evals, Guardrails & Capstone Deployment | Deployed Ledger Auditor with Langfuse tracing, Ragas eval CI, and public technical post-mortem. |
+
+---
+
+### The Daily Deliberate Practice Protocol (2 Hours/Day)
+
+To compress 9 months into 60 days, follow the **30-60-30 Protocol**:
+
+- **30 Mins (Theoretical Deconstruction):** Read paper equations or system architectures (Attention Is All You Need, LoRA paper, vLLM PagedAttention).
+- **60 Mins (Hands-on Code):** Write clean, production-grade Python/TypeScript code. Zero copy-pasting; code the mechanisms line by line.
+- **30 Mins (Proof of Work & Documentation):** Commit changes to GitHub, log latency/eval numbers, and draft technical notes for your post-mortem.
+
+---
+
+### Weekly Sprint Breakdown
+
+#### Weeks 1–2: Mechanics over Magic
+- **Day 1–4:** Implement scaled dot-product attention and multi-head attention in PyTorch from pure matrix operations.
+- **Day 5–8:** Build the KV-cache mechanism in a toy decoder. Benchmark inference latency with and without caching.
+- **Day 9–14:** Fine-tune Mistral/Llama using \`Unsloth\` or \`PEFT\` on a custom structured output dataset. Verify JSON schema adherence.
+
+#### Weeks 3–4: Production Retrieval
+- **Day 15–20:** Build a hybrid search index using \`pgvector\` or \`Qdrant\` alongside BM25. Implement Reciprocal Rank Fusion (RRF).
+- **Day 21–28:** Wire a Cross-Encoder Reranker (\`bge-reranker-large\` or Cohere API). Benchmark NDCG@10 against naive vector search.
+
+#### Weeks 5–6: Stateful Agents & High-Throughput Serving
+- **Day 29–35:** Build a LangGraph state machine. Include cyclic loops, structured Pydantic tool schemas, and PostgreSQL state checkpointers.
+- **Day 36–42:** Deploy an open model on \`vLLM\` or \`Ollama\`. Measure TTFT, TPS, and GPU VRAM consumption across context lengths.
+
+#### Weeks 7–8: Evals, Guardrails & Portfolio Launch
+- **Day 43–49:** Implement automated eval suites using \`Ragas\` and \`Promptfoo\` in GitHub Actions CI.
+- **Day 50–56:** Complete the End-to-End Capstone (Autonomous Financial Ledger Auditor) with Langfuse tracing.
+- **Day 57–60:** Publish your technical post-mortem and portfolio repository to GitHub and Vercel!
+        `
+      },
+      {
+        id: "ch-08",
+        title: "9. The 'Build in Public' Portfolio & Post-Mortem Playbook",
+        summary: "Shipping resilient artifacts, failure deep-dives & product-engineering bridges",
+        markdown: `
+# Chapter 9: The "Build in Public" Portfolio Playbook
+
+Theory without functional artifacts carries little weight in the market. True industry authority comes from proving you can ship resilient, production-ready systems.
+
+---
+
+### 1. The Anatomy of a High-Impact AI Portfolio
+
+Don't just build another generic chatbot. Build an autonomous system that interfaces with real external systems:
+
+1. **A Production Proof of Concept:** Autonomous ledger auditor, real-time risk classification engine, or multi-source synthesis agent.
+2. **Deterministic Evaluation Suites:** Show automated CI test runs tracking groundedness, faithfulness, and regression.
+3. **Observability Dashboards:** Include live telemetry screenshots showing TTFT, token cost per transaction, and latency profiles.
+
+---
+
+### 2. How to Write High-Credibility Technical Post-Mortems
+
+Top engineering teams hire practitioners who understand failure modes. Structure your write-ups using this proven framework:
+
+- **The Problem:** The latency or accuracy failure of the naive baseline (e.g., *"Why naive RAG returned hallucinated citations in 22% of queries"*).
+- **The Investigation:** Telemetry traces, attention maps, or vector distribution plots pinpointing the root cause.
+- **The Architectural Fix:** Upgrading to semantic window chunking, cross-encoder reranking, or deterministic math execution nodes.
+- **The Verifiable Results:** Before-and-after benchmarks: 99.4% faithfulness, 42% cost reduction, and 3x TTFT improvement.
+
+---
+
+### 3. The Product-Engineering Bridge
+
+The strongest AI leaders aren't just researchers or coders; they understand:
+- **Latency vs. Quality Trade-offs:** Knowing when a quantized 8B model matches a 70B model with a 75% latency reduction.
+- **Compute Margins:** Calculating unit economics per user session before scaling.
+- **Deterministic Superiority:** Knowing where a traditional rule-based algorithm or SQL join beats an LLM every time.
+        `
+      }
+    ];
+
+    // App State Management
+    let currentIdx = 0;
+    let completedChapters = JSON.parse(localStorage.getItem('ai_completed_chapters') || '[]');
+    let currentFontSize = parseInt(localStorage.getItem('ai_font_size') || '16');
+    let isDarkMode = localStorage.getItem('ai_theme') !== 'light';
+
+    // DOM Elements
+    const bodyEl = document.getElementById('article-body');
+    const navTitle = document.getElementById('nav-title');
+    const chapterPill = document.getElementById('current-chapter-pill');
+    const chaptersList = document.getElementById('chapters-list');
+    const completedCount = document.getElementById('completed-count');
+    const drawer = document.getElementById('drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const markBtn = document.getElementById('mark-btn');
+    const scrollProgress = document.getElementById('scroll-progress');
+    const searchInput = document.getElementById('search-input');
+    const themeIcon = document.getElementById('theme-icon');
+    const chapterReadTime = document.getElementById('chapter-read-time');
+    const chapterStatusPill = document.getElementById('chapter-status-pill');
+
+    // Initialize Application
+    function init() {
+      // Setup Theme
+      if (!isDarkMode) {
+        document.documentElement.classList.remove('dark');
+        themeIcon.setAttribute('data-lucide', 'sun');
+      } else {
+        document.documentElement.classList.add('dark');
+        themeIcon.setAttribute('data-lucide', 'moon');
+      }
+
+      // Check Saved Progress
+      const savedChapter = localStorage.getItem('ai_last_chapter_idx');
+      if (savedChapter !== null && CHAPTERS[savedChapter]) {
+        currentIdx = parseInt(savedChapter);
+      }
+
+      renderChapterList();
+      loadChapter(currentIdx);
+      applyFontSize();
+      lucide.createIcons();
+
+      // Register Service Worker for Offline PWA Support
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => {
+            const pwaStatus = document.getElementById('pwa-status');
+            if (pwaStatus) pwaStatus.innerText = 'PWA Offline Ready';
+          })
+          .catch((err) => console.log('SW registration note:', err));
+      }
+    }
+
+    function renderChapterList(filterText = '') {
+      chaptersList.innerHTML = '';
+      const query = filterText.toLowerCase().trim();
+
+      CHAPTERS.forEach((ch, idx) => {
+        if (query && !ch.title.toLowerCase().includes(query) && !ch.summary.toLowerCase().includes(query)) {
+          return;
+        }
+
+        const isDone = completedChapters.includes(ch.id);
+        const isActive = idx === currentIdx;
+        const item = document.createElement('button');
+        item.className = `w-full text-left p-3 rounded-xl flex items-center justify-between text-sm transition-all ${
+          isActive 
+            ? 'bg-brand-500/15 dark:bg-brand-600/25 text-brand-600 dark:text-brand-400 font-semibold border border-brand-500/30' 
+            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60'
+        }`;
+        
+        item.innerHTML = `
+          <div class="flex flex-col pr-2 truncate">
+            <span class="truncate font-medium">${ch.title}</span>
+            <span class="text-xs text-gray-500 dark:text-gray-400 font-normal truncate mt-0.5">${ch.summary}</span>
+          </div>
+          ${isDone ? '<i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>' : ''}
+        `;
+
+        item.onclick = () => {
+          loadChapter(idx);
+          toggleDrawer(false);
+        };
+        chaptersList.appendChild(item);
+      });
+
+      completedCount.innerText = `${completedChapters.length}/${CHAPTERS.length} Done`;
+      lucide.createIcons();
+    }
+
+    function loadChapter(idx) {
+      currentIdx = idx;
+      localStorage.setItem('ai_last_chapter_idx', idx);
+      const ch = CHAPTERS[idx];
+
+      chapterPill.innerText = `Chapter ${idx + 1} of ${CHAPTERS.length}`;
+      navTitle.innerText = ch.title;
+      
+      // Calculate reading time
+      const wordCount = ch.markdown.split(/\s+/).length;
+      const readMinutes = Math.max(1, Math.ceil(wordCount / 200));
+      chapterReadTime.innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${readMinutes} min read (${wordCount} words)`;
+
+      // Render Markdown
+      bodyEl.innerHTML = marked.parse(ch.markdown);
+
+      // Render KaTeX Math Equations
+      if (window.renderMathInElement) {
+        renderMathInElement(bodyEl, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+
+      // Add Copy Buttons to Code Blocks
+      bodyEl.querySelectorAll('pre').forEach((pre) => {
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-code-btn';
+        copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy';
+        copyBtn.onclick = () => {
+          const code = pre.querySelector('code')?.innerText || pre.innerText;
+          navigator.clipboard.writeText(code).then(() => {
+            copyBtn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Copied';
+            setTimeout(() => {
+              copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy';
+              lucide.createIcons();
+            }, 2000);
+          });
+        };
+        pre.appendChild(copyBtn);
+      });
+
+      // Update Navigation Buttons
+      prevBtn.disabled = idx === 0;
+      prevBtn.style.opacity = idx === 0 ? '0.4' : '1';
+      prevBtn.style.pointerEvents = idx === 0 ? 'none' : 'auto';
+
+      nextBtn.disabled = idx === CHAPTERS.length - 1;
+      nextBtn.style.opacity = idx === CHAPTERS.length - 1 ? '0.4' : '1';
+      nextBtn.style.pointerEvents = idx === CHAPTERS.length - 1 ? 'none' : 'auto';
+
+      updateDoneButton();
+      renderChapterList(searchInput.value);
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateDoneButton() {
+      const isDone = completedChapters.includes(CHAPTERS[currentIdx].id);
+      if (isDone) {
+        markBtn.classList.add('bg-emerald-500/20', 'border-emerald-500');
+        markBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Completed';
+        chapterStatusPill.className = 'px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-500/30';
+        chapterStatusPill.innerText = 'Completed';
+      } else {
+        markBtn.classList.remove('bg-emerald-500/20', 'border-emerald-500');
+        markBtn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> Mark Done';
+        chapterStatusPill.className = 'px-2 py-0.5 rounded-full text-[11px] font-medium bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+        chapterStatusPill.innerText = 'In Progress';
+      }
+      lucide.createIcons();
+    }
+
+    function toggleDrawer(open) {
+      if (open) {
+        drawerOverlay.classList.remove('hidden');
+        setTimeout(() => drawerOverlay.classList.remove('opacity-0'), 10);
+        drawer.classList.remove('-translate-x-full');
+      } else {
+        drawerOverlay.classList.add('opacity-0');
+        drawer.classList.add('-translate-x-full');
+        setTimeout(() => drawerOverlay.classList.add('hidden'), 300);
+      }
+    }
+
+    function applyFontSize() {
+      bodyEl.style.fontSize = `${currentFontSize}px`;
+    }
+
+    // Scroll Reading Progress Indicator
+    window.addEventListener('scroll', () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        scrollProgress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+      }
+    });
+
+    // Event Listeners
+    document.getElementById('menu-btn').onclick = () => toggleDrawer(true);
+    document.getElementById('drawer-close').onclick = () => toggleDrawer(false);
+    drawerOverlay.onclick = () => toggleDrawer(false);
+
+    prevBtn.onclick = () => {
+      if (currentIdx > 0) loadChapter(currentIdx - 1);
+    };
+
+    nextBtn.onclick = () => {
+      if (currentIdx < CHAPTERS.length - 1) loadChapter(currentIdx + 1);
+    };
+
+    markBtn.onclick = () => {
+      const id = CHAPTERS[currentIdx].id;
+      if (completedChapters.includes(id)) {
+        completedChapters = completedChapters.filter(x => x !== id);
+      } else {
+        completedChapters.push(id);
+      }
+      localStorage.setItem('ai_completed_chapters', JSON.stringify(completedChapters));
+      updateDoneButton();
+      renderChapterList(searchInput.value);
+    };
+
+    document.getElementById('font-btn').onclick = () => {
+      currentFontSize = currentFontSize >= 21 ? 15 : currentFontSize + 1;
+      localStorage.setItem('ai_font_size', currentFontSize);
+      applyFontSize();
+    };
+
+    document.getElementById('theme-btn').onclick = () => {
+      isDarkMode = !isDarkMode;
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('ai_theme', isDarkMode ? 'dark' : 'light');
+      themeIcon.setAttribute('data-lucide', isDarkMode ? 'moon' : 'sun');
+      lucide.createIcons();
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      renderChapterList(e.target.value);
+    });
+
+    // Initialize once DOM is ready
+    window.addEventListener('DOMContentLoaded', () => {
+      init();
+    });
+  </script>
+</body>
+</html>

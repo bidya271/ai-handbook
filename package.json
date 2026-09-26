@@ -1,0 +1,21 @@
+{
+  "name": "ai-mastery-handbook",
+  "version": "1.0.0",
+  "description": "Mobile-first, chapter-based interactive AI course reader with offline PWA support and accelerated timeline roadmap.",
+  "private": true,
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "ai",
+    "handbook",
+    "pwa",
+    "course",
+    "rag",
+    "agents",
+    "transformers",
+    "evals"
+  ],
+  "author": "bidya271",
+  "license": "MIT"
+}
