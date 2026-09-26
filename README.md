@@ -41,6 +41,7 @@ ai-handbook/
 ├── chapter_01_foundations.md                # Standalone deep dive on Tensors, Tokenization & Latent Space
 ├── chapter_02_attention_and_kv_cache.md      # Standalone deep dive on Attention, GQA & KV-Cache Sizing
 ├── chapter_03_training_lora_and_alignment.md # Standalone deep dive on Loss, AdamW, LoRA/QLoRA & DPO
+├── chapter_04_production_rag_and_retrieval.md# Standalone deep dive on Chunking, HNSW/IVF, BM25 & Rerankers
 ├── index.html                               # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
 ├── manifest.json                            # Progressive Web App (PWA) manifest configuration
 ├── package.json                             # Project definition and static serve scripts
@@ -89,7 +90,7 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 - **Chapter 1:** The Mechanical Foundation: Tensors, BBPE Tokenization, $W_E$ Lookups, RoPE & Latent Space Geometry
 - **Chapter 2:** The Attention Engine: Projections ($Q, K, V$), Scaled Dot-Product, GQA & Production KV Cache Math
 - **Chapter 3:** Adaptation & Optimization: Cross-Entropy Loss, AdamW, LoRA, QLoRA (NF4) & DPO Alignment
-- **Chapter 4:** Vector Search & Advanced Production RAG
+- **Chapter 4:** Production RAG & Hybrid Retrieval: Semantic Window Chunking, HNSW/IVF Graphs, BM25 & Cross-Encoder Rerankers
 - **Chapter 5:** Stateful Agentic Systems & State Machines
 - **Chapter 6:** Inference Optimization & Serving at Scale
 - **Chapter 7:** Production Evals & Guardrails
