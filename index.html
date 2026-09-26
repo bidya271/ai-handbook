@@ -213,14 +213,19 @@
       border-color: #cbd5e1;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
-    .mermaid {
+    .mermaid, .mermaid-target {
       display: flex;
       justify-content: center;
       min-width: 280px;
     }
-    .mermaid svg {
+    .mermaid svg, .mermaid-target svg {
       max-width: 100%;
       height: auto;
+    }
+
+    /* Suppress any default error elements injected by third-party Mermaid library */
+    .error-icon, [id^="dmermaid-svg-"] {
+      display: none !important;
     }
 
     /* Copy code button */
@@ -513,9 +518,17 @@
         const readMinutes = Math.max(1, Math.ceil(wordCount / 200));
         chapterReadTime.innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${readMinutes} min read (${wordCount} words)`;
 
-        // 1. Math extraction to protect LaTeX formulas from Markdown parser corruption
+        // 1. Extract Mermaid diagrams so marked.parse does not corrupt them with HTML entities
+        const mermaidDiagrams = [];
+        let cleanMd = (ch.markdown || '').replace(/```mermaid\s*\n([\s\S]*?)```/g, (m, code) => {
+          const id = mermaidDiagrams.length;
+          mermaidDiagrams.push(code.trim());
+          return `\n\n%%%MERMAID_DIAGRAM_${id}%%%\n\n`;
+        });
+
+        // 2. Math extraction to protect LaTeX formulas from Markdown parser corruption
         const displayMath = [];
-        let cleanMd = (ch.markdown || '').replace(/\$\$([\s\S]*?)\$\$/g, (m, formula) => {
+        cleanMd = cleanMd.replace(/\$\$([\s\S]*?)\$\$/g, (m, formula) => {
           const id = displayMath.length;
           displayMath.push(formula.trim());
           return `\n\n%%%MATH_DISPLAY_${id}%%%\n\n`;
@@ -530,7 +543,7 @@
           return `%%%MATH_INLINE_${id}%%%`;
         });
 
-        // 2. Render Markdown
+        // 3. Render Markdown
         let renderedHtml = '';
         if (typeof marked !== 'undefined' && marked.parse) {
           renderedHtml = marked.parse(cleanMd);
@@ -538,7 +551,7 @@
           renderedHtml = `<pre class="whitespace-pre-wrap font-sans text-sm">${cleanMd}</pre>`;
         }
 
-        // 3. Restore Display Math into beautiful formula card blocks
+        // 4. Restore Display Math into beautiful formula card blocks
         renderedHtml = renderedHtml.replace(/<p>\s*%%%MATH_DISPLAY_(\d+)%%%\s*<\/p>|%%%MATH_DISPLAY_(\d+)%%%/g, (m, id1, id2) => {
           const id = parseInt(id1 || id2, 10);
           const formula = displayMath[id] || '';
@@ -551,40 +564,38 @@
             </div>`;
         });
 
-        // 4. Restore Inline Math
+        // 5. Restore Inline Math
         renderedHtml = renderedHtml.replace(/%%%MATH_INLINE_(\d+)%%%/g, (m, id) => {
           const formula = inlineMath[parseInt(id, 10)] || '';
           return `<span class="math-inline font-serif px-1 py-0.5 rounded bg-indigo-500/10 text-indigo-200 border border-indigo-500/20 text-[0.95em]">$${formula}$</span>`;
         });
 
-        bodyEl.innerHTML = renderedHtml;
-
-        // 5. Transform ```mermaid code blocks into Mermaid SVG containers
-        bodyEl.querySelectorAll('pre code.language-mermaid').forEach((codeBlock, idx) => {
-          const pre = codeBlock.parentElement;
-          const diagramCode = codeBlock.innerText.trim();
-          const wrapper = document.createElement('div');
-          wrapper.className = 'diagram-wrapper my-6 p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 shadow-xl overflow-x-auto';
-          wrapper.innerHTML = `
-            <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2 select-none">
-              <div class="flex items-center gap-2">
-                <span class="p-1 rounded-md bg-indigo-500/20 text-indigo-400"><i data-lucide="git-fork" class="w-4 h-4"></i></span>
-                <span class="text-xs font-bold text-gray-200 uppercase tracking-wider">Architecture Flowchart</span>
+        // 6. Restore Mermaid diagrams as isolated target containers
+        renderedHtml = renderedHtml.replace(/<p>\s*%%%MERMAID_DIAGRAM_(\d+)%%%\s*<\/p>|%%%MERMAID_DIAGRAM_(\d+)%%%/g, (m, id1, id2) => {
+          const id = parseInt(id1 || id2, 10);
+          return `
+            <div class="diagram-wrapper my-6 p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 shadow-xl overflow-x-auto">
+              <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2 select-none">
+                <div class="flex items-center gap-2">
+                  <span class="p-1 rounded-md bg-indigo-500/20 text-indigo-400"><i data-lucide="git-fork" class="w-4 h-4"></i></span>
+                  <span class="text-xs font-bold text-gray-200 uppercase tracking-wider">Architecture Flowchart</span>
+                </div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-500/30">Vector Flow</span>
               </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-500/30">Vector Flow</span>
-            </div>
-            <div class="mermaid flex justify-center py-2 min-w-[320px] text-center" id="mermaid-graph-${idx}">
-              ${diagramCode}
-            </div>
-          `;
-          pre.parentNode.replaceChild(wrapper, pre);
+              <div class="mermaid-target flex justify-center py-2 min-w-[320px] text-center" id="mermaid-graph-${id}" data-diagram-id="${id}">
+                <div class="text-xs text-indigo-400/60 font-mono py-4 animate-pulse">Initializing vector diagram...</div>
+              </div>
+            </div>`;
         });
 
-        // 6. Run Mermaid renderer with individual graph isolation & fallback
+        bodyEl.innerHTML = renderedHtml;
+
+        // 7. Run Mermaid renderer with pristine raw code & strict error suppression
         if (window.mermaid) {
           try {
             mermaid.initialize({
               startOnLoad: false,
+              suppressErrorRendering: true,
               theme: isDarkMode ? 'dark' : 'neutral',
               securityLevel: 'loose',
               fontFamily: 'Inter, system-ui, sans-serif',
@@ -602,23 +613,35 @@
             console.warn('Mermaid init warning:', mInitErr);
           }
 
-          bodyEl.querySelectorAll('.mermaid').forEach((node, i) => {
-            const rawCode = node.innerText.trim();
+          // Clean up any stray error elements mermaid might have injected previously
+          document.querySelectorAll('.error-icon, [id^="dmermaid-"]').forEach(el => el.remove());
+
+          bodyEl.querySelectorAll('.mermaid-target').forEach((node) => {
+            const id = parseInt(node.getAttribute('data-diagram-id'), 10);
+            const rawCode = mermaidDiagrams[id];
             if (!rawCode) return;
-            const uniqueId = `mermaid-svg-${Date.now()}-${i}`;
+            const uniqueId = `mermaid-svg-${Date.now()}-${id}-${Math.floor(Math.random() * 1000)}`;
             try {
               if (mermaid.render) {
                 mermaid.render(uniqueId, rawCode).then(({ svg }) => {
                   node.innerHTML = svg;
+                  const stray = document.getElementById('d' + uniqueId);
+                  if (stray) stray.remove();
                 }).catch(renderErr => {
-                  console.warn(`Mermaid render failed for block ${i}:`, renderErr);
+                  console.warn(`Mermaid render failed for diagram ${id}:`, renderErr);
+                  const stray = document.getElementById('d' + uniqueId);
+                  if (stray) stray.remove();
                   node.innerHTML = `<pre class="text-xs text-indigo-300 font-mono p-3 bg-black/40 rounded-lg overflow-x-auto text-left whitespace-pre">${rawCode}</pre>`;
                 });
               } else if (mermaid.run) {
+                node.innerText = rawCode;
+                node.className = 'mermaid';
                 mermaid.run({ nodes: [node] });
               }
             } catch (err) {
-              console.warn(`Mermaid block ${i} error:`, err);
+              console.warn(`Mermaid diagram ${id} error:`, err);
+              const stray = document.getElementById('d' + uniqueId);
+              if (stray) stray.remove();
               node.innerHTML = `<pre class="text-xs text-indigo-300 font-mono p-3 bg-black/40 rounded-lg overflow-x-auto text-left whitespace-pre">${rawCode}</pre>`;
             }
           });
