@@ -224,7 +224,7 @@
     }
 
     /* Suppress any default error elements injected by third-party Mermaid library */
-    .error-icon, [id^="dmermaid-svg-"] {
+    .error-icon, .error-text {
       display: none !important;
     }
 
@@ -613,24 +613,20 @@
             console.warn('Mermaid init warning:', mInitErr);
           }
 
-          // Clean up any stray error elements mermaid might have injected previously
-          document.querySelectorAll('.error-icon, [id^="dmermaid-"]').forEach(el => el.remove());
+          // Clean up any stray error elements
+          document.querySelectorAll('.error-icon, .error-text').forEach(el => el.remove());
 
           bodyEl.querySelectorAll('.mermaid-target').forEach((node) => {
             const id = parseInt(node.getAttribute('data-diagram-id'), 10);
             const rawCode = mermaidDiagrams[id];
             if (!rawCode) return;
-            const uniqueId = `mermaid-svg-${Date.now()}-${id}-${Math.floor(Math.random() * 1000)}`;
+            const uniqueId = `flowchart-svg-${id}-${Math.floor(Math.random() * 100000)}`;
             try {
               if (mermaid.render) {
                 mermaid.render(uniqueId, rawCode).then(({ svg }) => {
                   node.innerHTML = svg;
-                  const stray = document.getElementById('d' + uniqueId);
-                  if (stray) stray.remove();
                 }).catch(renderErr => {
                   console.warn(`Mermaid render failed for diagram ${id}:`, renderErr);
-                  const stray = document.getElementById('d' + uniqueId);
-                  if (stray) stray.remove();
                   node.innerHTML = `<pre class="text-xs text-indigo-300 font-mono p-3 bg-black/40 rounded-lg overflow-x-auto text-left whitespace-pre">${rawCode}</pre>`;
                 });
               } else if (mermaid.run) {
@@ -640,8 +636,6 @@
               }
             } catch (err) {
               console.warn(`Mermaid diagram ${id} error:`, err);
-              const stray = document.getElementById('d' + uniqueId);
-              if (stray) stray.remove();
               node.innerHTML = `<pre class="text-xs text-indigo-300 font-mono p-3 bg-black/40 rounded-lg overflow-x-auto text-left whitespace-pre">${rawCode}</pre>`;
             }
           });
