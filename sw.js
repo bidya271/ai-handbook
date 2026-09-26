@@ -1,5 +1,5 @@
-// AI Mastery Reader - Service Worker for Offline Reading
-const CACHE_NAME = 'ai-mastery-v1';
+// AI Mastery Reader - Service Worker for Offline Reading (v2)
+const CACHE_NAME = 'ai-mastery-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -31,15 +31,29 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  // Network-first for HTML navigation requests so users always see latest deployment
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+          return response;
+        })
+        .catch(() => caches.match(event.request) || caches.match('/index.html') || caches.match('/'))
+    );
+    return;
+  }
+
+  // Cache-first for static assets with background revalidation
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Return cached and update in background if online
         fetch(event.request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
           }
-        }).catch(() => {/* Offline, fallback to cached */});
+        }).catch(() => {});
         return cachedResponse;
       }
 
@@ -52,12 +66,7 @@ self.addEventListener('fetch', (event) => {
           cache.put(event.request, responseToCache);
         });
         return networkResponse;
-      }).catch(() => {
-        // Fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html') || caches.match('/');
-        }
-      });
+      }).catch(() => {});
     })
   );
 });

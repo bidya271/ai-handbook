@@ -326,7 +326,7 @@
     "summary": "Shipping resilient artifacts, failure deep-dives & product-engineering bridges",
     "markdown": "# Chapter 10: The \"Build in Public\" Portfolio Playbook\n\nTheory without functional artifacts carries little weight in the market. True industry authority comes from proving you can ship resilient, production-ready systems.\n\n---\n\n### 1. The Anatomy of a High-Impact AI Portfolio\n\nDon't just build another generic chatbot. Build an autonomous system that interfaces with real external systems:\n\n1. **A Production Proof of Concept:** Autonomous ledger auditor, real-time risk classification engine, or multi-source synthesis agent.\n2. **Deterministic Evaluation Suites:** Show automated CI test runs tracking groundedness, faithfulness, and regression.\n3. **Observability Dashboards:** Include live telemetry screenshots showing TTFT, token cost per transaction, and latency profiles.\n\n---\n\n### 2. How to Write High-Credibility Technical Post-Mortems\n\nTop engineering teams hire practitioners who understand failure modes. Structure your write-ups using this proven framework:\n\n- **The Problem:** The latency or accuracy failure of the naive baseline (e.g., *\"Why naive RAG returned hallucinated citations in 22% of queries\"*).\n- **The Investigation:** Telemetry traces, attention maps, or vector distribution plots pinpointing the root cause.\n- **The Architectural Fix:** Upgrading to semantic window chunking, cross-encoder reranking, or deterministic math execution nodes.\n- **The Verifiable Results:** Before-and-after benchmarks: 99.4% faithfulness, 42% cost reduction, and 3x TTFT improvement.\n\n---\n\n### 3. The Product-Engineering Bridge\n\nThe strongest AI leaders aren't just researchers or coders; they understand:\n- **Latency vs. Quality Trade-offs:** Knowing when a quantized 8B model matches a 70B model with a 75% latency reduction.\n- **Compute Margins:** Calculating unit economics per user session before scaling.\n- **Deterministic Superiority:** Knowing where a traditional rule-based algorithm or SQL join beats an LLM every time.\n"
   }
-]];
+];
 
     // App State Management
     let currentIdx = 0;
@@ -421,65 +421,329 @@
       lucide.createIcons();
     }
 
-    function loadChapter(idx) {
-      currentIdx = idx;
-      localStorage.setItem('ai_last_chapter_idx', idx);
-      const ch = CHAPTERS[idx];
+        function loadChapter(idx) {
+      try {
+        currentIdx = idx;
+        localStorage.setItem('ai_last_chapter_idx', idx);
+        const ch = CHAPTERS[idx];
 
-      chapterPill.innerText = `Chapter ${idx + 1} of ${CHAPTERS.length}`;
-      navTitle.innerText = ch.title;
-      
-      // Calculate reading time
-      const wordCount = ch.markdown.split(/\s+/).length;
-      const readMinutes = Math.max(1, Math.ceil(wordCount / 200));
-      chapterReadTime.innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${readMinutes} min read (${wordCount} words)`;
+        chapterPill.innerText = `Chapter ${idx + 1} of ${CHAPTERS.length}`;
+        navTitle.innerText = ch.title;
+        
+        // Calculate reading time
+        const wordCount = (ch.markdown || '').split(/\s+/).length;
+        const readMinutes = Math.max(1, Math.ceil(wordCount / 200));
+        chapterReadTime.innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${readMinutes} min read (${wordCount} words)`;
 
-      // Render Markdown
-      bodyEl.innerHTML = marked.parse(ch.markdown);
+        // Render Markdown safely
+        if (typeof marked !== 'undefined' && marked.parse) {
+          bodyEl.innerHTML = marked.parse(ch.markdown);
+        } else {
+          bodyEl.innerHTML = `<div class="prose dark:prose-invert"><pre class="whitespace-pre-wrap font-sans text-sm">${ch.markdown}</pre></div>`;
+        }
 
-      // Render KaTeX Math Equations
-      if (window.renderMathInElement) {
-        renderMathInElement(bodyEl, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false}
-          ],
-          throwOnError: false
+        // Render KaTeX Math Equations safely
+        if (window.renderMathInElement) {
+          try {
+            renderMathInElement(bodyEl, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+              ],
+              throwOnError: false
+            });
+          } catch (mErr) {
+            console.warn('KaTeX render note:', mErr);
+          }
+        }
+
+        // Add Copy Buttons to Code Blocks
+        bodyEl.querySelectorAll('pre').forEach((pre) => {
+          if (pre.querySelector('.copy-code-btn')) return;
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-code-btn';
+          copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy';
+          copyBtn.onclick = () => {
+            const code = pre.querySelector('code')?.innerText || pre.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+              copyBtn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Copied';
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy';
+                if (window.lucide) lucide.createIcons();
+              }, 2000);
+            });
+          };
+          pre.appendChild(copyBtn);
         });
+
+        // Inject Interactive Simulators for relevant chapters
+        injectChapterWidgets(ch.id);
+
+        // Update Navigation Buttons
+        prevBtn.disabled = idx === 0;
+        prevBtn.style.opacity = idx === 0 ? '0.4' : '1';
+        prevBtn.style.pointerEvents = idx === 0 ? 'none' : 'auto';
+
+        nextBtn.disabled = idx === CHAPTERS.length - 1;
+        nextBtn.style.opacity = idx === CHAPTERS.length - 1 ? '0.4' : '1';
+        nextBtn.style.pointerEvents = idx === CHAPTERS.length - 1 ? 'none' : 'auto';
+
+        updateDoneButton();
+        renderChapterList(searchInput ? searchInput.value : '');
+        if (window.lucide) lucide.createIcons();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        console.error('Error loading chapter:', err);
+        bodyEl.innerHTML = `<div class="p-6 bg-red-950/40 border border-red-500/50 rounded-xl text-red-200">
+          <h3 class="font-bold text-base mb-2">Error Displaying Chapter</h3>
+          <p class="text-sm font-mono">${err.message}</p>
+          <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold">Reload Application</button>
+        </div>`;
+      }
+    }
+
+    // Interactive Simulators for Beginner-to-Expert Intuition
+    function injectChapterWidgets(chapterId) {
+      if (chapterId === 'ch-02') {
+        // KV Cache Sizing Simulator
+        const widget = document.createElement('div');
+        widget.className = 'mt-8 p-5 rounded-2xl bg-gradient-to-br from-indigo-950/50 to-slate-900 border border-indigo-500/30 text-gray-200 shadow-xl';
+        widget.innerHTML = `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="p-1.5 rounded-lg bg-brand-500/20 text-brand-400"><i data-lucide="cpu" class="w-5 h-5"></i></span>
+            <h4 class="font-bold text-base text-white">Interactive KV-Cache & VRAM Sizer Simulator</h4>
+          </div>
+          <p class="text-xs text-gray-400 mb-4">Slide the parameters below to see how context length and concurrency create the "Memory Wall" in production LLM inference.</p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Context Length: <span id="vram-seq-val" class="text-brand-400 font-bold">32,768</span> tokens</label>
+              <input type="range" id="vram-seq" min="2048" max="131072" step="2048" value="32768" class="w-full accent-brand-500">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Concurrent Requests (Batch Size): <span id="vram-batch-val" class="text-brand-400 font-bold">8</span></label>
+              <input type="range" id="vram-batch" min="1" max="64" step="1" value="8" class="w-full accent-brand-500">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Attention Head Architecture:</label>
+              <select id="vram-arch" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                <option value="gqa">Grouped-Query Attention (GQA - 8 KV Heads) [LLaMA-3]</option>
+                <option value="mha">Multi-Head Attention (MHA - 64 KV Heads) [GPT-3]</option>
+                <option value="mqa">Multi-Query Attention (MQA - 1 KV Head)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Precision:</label>
+              <select id="vram-prec" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                <option value="2">BF16 / FP16 (2 Bytes per param)</option>
+                <option value="1">FP8 (1 Byte per param)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-xl bg-black/40 border border-gray-800 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Per-Token KV Footprint</div>
+              <div id="vram-per-token" class="text-lg font-extrabold text-white mt-0.5">320 KB</div>
+            </div>
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Total KV Cache VRAM Required</div>
+              <div id="vram-total" class="text-2xl font-black text-brand-400 mt-0.5">81.92 GB</div>
+            </div>
+            <div id="vram-gpu-recommendation" class="text-xs px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Requires 2x 80GB H100 GPUs for KV-Cache alone!
+            </div>
+          </div>
+        `;
+        bodyEl.appendChild(widget);
+
+        // Wire simulator reactivity
+        const seqInput = widget.querySelector('#vram-seq');
+        const batchInput = widget.querySelector('#vram-batch');
+        const archSelect = widget.querySelector('#vram-arch');
+        const precSelect = widget.querySelector('#vram-prec');
+
+        function recalcVram() {
+          const seq = parseInt(seqInput.value);
+          const batch = parseInt(batchInput.value);
+          const prec = parseInt(precSelect.value);
+          const arch = archSelect.value;
+          
+          widget.querySelector('#vram-seq-val').innerText = seq.toLocaleString();
+          widget.querySelector('#vram-batch-val').innerText = batch;
+
+          const nLayers = 80;
+          const dHead = 128;
+          let kvHeads = 8;
+          if (arch === 'mha') kvHeads = 64;
+          if (arch === 'mqa') kvHeads = 1;
+
+          const bytesPerToken = 2 * prec * nLayers * kvHeads * dHead;
+          const totalBytes = bytesPerToken * seq * batch;
+          const totalGB = totalBytes / (1024 * 1024 * 1024);
+
+          widget.querySelector('#vram-per-token').innerText = (bytesPerToken / 1024).toFixed(1) + ' KB';
+          widget.querySelector('#vram-total').innerText = totalGB.toFixed(2) + ' GB';
+
+          const recEl = widget.querySelector('#vram-gpu-recommendation');
+          if (totalGB < 16) {
+            recEl.className = 'text-xs px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+            recEl.innerText = 'Fits inside a single consumer 24GB GPU (RTX 4090 / A10G)';
+          } else if (totalGB < 80) {
+            recEl.className = 'text-xs px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/30';
+            recEl.innerText = 'Fits on 1x 80GB A100/H100 GPU';
+          } else if (totalGB < 320) {
+            recEl.className = 'text-xs px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30';
+            recEl.innerText = `Requires ${Math.ceil(totalGB / 80)}x 80GB H100 GPUs for KV-Cache alone!`;
+          } else {
+            recEl.className = 'text-xs px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-500/30';
+            recEl.innerText = `Extreme Memory Wall: ${Math.ceil(totalGB / 80)}x 80GB GPUs needed! Must use PagedAttention / vLLM.`;
+          }
+        }
+
+        seqInput.oninput = recalcVram;
+        batchInput.oninput = recalcVram;
+        archSelect.onchange = recalcVram;
+        precSelect.onchange = recalcVram;
+        recalcVram();
       }
 
-      // Add Copy Buttons to Code Blocks
-      bodyEl.querySelectorAll('pre').forEach((pre) => {
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-code-btn';
-        copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy';
-        copyBtn.onclick = () => {
-          const code = pre.querySelector('code')?.innerText || pre.innerText;
-          navigator.clipboard.writeText(code).then(() => {
-            copyBtn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Copied';
-            setTimeout(() => {
-              copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy';
-              lucide.createIcons();
-            }, 2000);
-          });
-        };
-        pre.appendChild(copyBtn);
-      });
+      if (chapterId === 'ch-03') {
+        // LoRA vs Full Fine-Tuning Savings Calculator
+        const widget = document.createElement('div');
+        widget.className = 'mt-8 p-5 rounded-2xl bg-gradient-to-br from-purple-950/50 to-slate-900 border border-purple-500/30 text-gray-200 shadow-xl';
+        widget.innerHTML = `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="p-1.5 rounded-lg bg-purple-500/20 text-purple-400"><i data-lucide="sliders" class="w-5 h-5"></i></span>
+            <h4 class="font-bold text-base text-white">Interactive LoRA vs. Full Fine-Tuning Estimator</h4>
+          </div>
+          <p class="text-xs text-gray-400 mb-4">Compare memory overhead and trainable parameter counts to understand why LoRA/QLoRA democratized fine-tuning.</p>
 
-      // Update Navigation Buttons
-      prevBtn.disabled = idx === 0;
-      prevBtn.style.opacity = idx === 0 ? '0.4' : '1';
-      prevBtn.style.pointerEvents = idx === 0 ? 'none' : 'auto';
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Base Model Size:</label>
+              <select id="lora-model" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                <option value="7">Llama-3 8B (8 Billion Params)</option>
+                <option value="14">Qwen-2.5 14B (14 Billion Params)</option>
+                <option value="70">Llama-3 70B (70 Billion Params)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">LoRA Rank Hyperparameter ($r$):</label>
+              <select id="lora-rank" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                <option value="8">r = 8 (Minimal, high efficiency)</option>
+                <option value="16" selected>r = 16 (Industry standard sweet spot)</option>
+                <option value="64">r = 64 (High expressivity)</option>
+              </select>
+            </div>
+          </div>
 
-      nextBtn.disabled = idx === CHAPTERS.length - 1;
-      nextBtn.style.opacity = idx === CHAPTERS.length - 1 ? '0.4' : '1';
-      nextBtn.style.pointerEvents = idx === CHAPTERS.length - 1 ? 'none' : 'auto';
+          <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3.5 rounded-xl bg-black/40 border border-gray-800">
+              <div class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Full Fine-Tuning VRAM</div>
+              <div id="lora-full-vram" class="text-lg font-extrabold text-red-400 mt-1">128 GB</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">16 bytes/param (AdamW + grads)</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-black/40 border border-gray-800">
+              <div class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">LoRA (16-bit) VRAM</div>
+              <div id="lora-lora-vram" class="text-lg font-extrabold text-blue-400 mt-1">18 GB</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Frozen W_0 + tiny adapters</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-black/40 border border-purple-500/30 bg-purple-950/20">
+              <div class="text-[11px] uppercase tracking-wider text-purple-300 font-semibold">QLoRA (NF4) VRAM</div>
+              <div id="lora-qlora-vram" class="text-lg font-extrabold text-emerald-400 mt-1">5.8 GB</div>
+              <div class="text-[10px] text-emerald-500/80 mt-0.5">Fits on a single MacBook or laptop!</div>
+            </div>
+          </div>
+        `;
+        bodyEl.appendChild(widget);
 
-      updateDoneButton();
-      renderChapterList(searchInput.value);
-      lucide.createIcons();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        const modelSelect = widget.querySelector('#lora-model');
+        const rankSelect = widget.querySelector('#lora-rank');
+
+        function recalcLora() {
+          const params = parseFloat(modelSelect.value);
+          const fullVram = params * 16;
+          const loraVram = (params * 2) + 2; // ~2 bytes/param base + 2GB adapter/activation overhead
+          const qloraVram = (params * 0.5) + 1.8; // ~0.5 bytes/param 4-bit base + activation overhead
+
+          widget.querySelector('#lora-full-vram').innerText = fullVram.toFixed(0) + ' GB';
+          widget.querySelector('#lora-lora-vram').innerText = loraVram.toFixed(1) + ' GB';
+          widget.querySelector('#lora-qlora-vram').innerText = qloraVram.toFixed(1) + ' GB';
+        }
+
+        modelSelect.onchange = recalcLora;
+        rankSelect.onchange = recalcLora;
+        recalcLora();
+      }
+
+      if (chapterId === 'ch-09') {
+        // Fast-Track 60-Day Sprint Calculator
+        const widget = document.createElement('div');
+        widget.className = 'mt-8 p-5 rounded-2xl bg-gradient-to-br from-emerald-950/50 to-slate-900 border border-emerald-500/30 text-gray-200 shadow-xl';
+        widget.innerHTML = `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400"><i data-lucide="zap" class="w-5 h-5"></i></span>
+            <h4 class="font-bold text-base text-white">Interactive Accelerated Timeline Calculator</h4>
+          </div>
+          <p class="text-xs text-gray-400 mb-4">Calculate how fast you will transition from beginner to industry-ready AI engineer by dialing your daily deliberate practice.</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Daily Deliberate Practice: <span id="sprint-hours-val" class="text-emerald-400 font-bold">2 Hours</span>/day</label>
+              <input type="range" id="sprint-hours" min="1" max="6" step="0.5" value="2" class="w-full accent-emerald-500">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1 text-gray-300">Pace Mode:</label>
+              <select id="sprint-mode" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                <option value="60">Hyper-Sprint (60 Days / 8 Weeks)</option>
+                <option value="90">Focused Fast-Track (90 Days / 12 Weeks)</option>
+                <option value="180">Standard Pace (180 Days / 6 Months)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-xl bg-black/40 border border-gray-800 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Total Deliberate Hours</div>
+              <div id="sprint-total-hours" class="text-xl font-extrabold text-white mt-0.5">120 Hours</div>
+            </div>
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Target Industry Readiness Date</div>
+              <div id="sprint-target-date" class="text-xl font-extrabold text-emerald-400 mt-0.5">In ~8 Weeks</div>
+            </div>
+            <div class="text-xs text-gray-400">
+              Protocol: <strong>30m</strong> paper read · <strong>60m</strong> code · <strong>30m</strong> git commit
+            </div>
+          </div>
+        `;
+        bodyEl.appendChild(widget);
+
+        const hoursInput = widget.querySelector('#sprint-hours');
+        const modeSelect = widget.querySelector('#sprint-mode');
+
+        function recalcSprint() {
+          const hours = parseFloat(hoursInput.value);
+          const days = parseInt(modeSelect.value);
+          widget.querySelector('#sprint-hours-val').innerText = hours + ' Hours';
+
+          const totalHours = Math.round(hours * days);
+          const weeks = Math.round(days / 7);
+
+          const target = new Date();
+          target.setDate(target.getDate() + days);
+          const options = { month: 'short', day: 'numeric', year: 'numeric' };
+
+          widget.querySelector('#sprint-total-hours').innerText = totalHours + ' Hours';
+          widget.querySelector('#sprint-target-date').innerText = target.toLocaleDateString(undefined, options) + ` (~${weeks} wks)`;
+        }
+
+        hoursInput.oninput = recalcSprint;
+        modeSelect.onchange = recalcSprint;
+        recalcSprint();
+      }
     }
+
 
     function updateDoneButton() {
       const isDone = completedChapters.includes(CHAPTERS[currentIdx].id);
@@ -565,10 +829,12 @@
       renderChapterList(e.target.value);
     });
 
-    // Initialize once DOM is ready
-    window.addEventListener('DOMContentLoaded', () => {
+    // Initialize immediately or once DOM is ready
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', init);
+    } else {
       init();
-    });
+    }
   </script>
 </body>
 </html>
