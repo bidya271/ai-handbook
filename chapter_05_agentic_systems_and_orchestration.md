@@ -6,42 +6,30 @@ In Chapters 1 through 4, we examined static generation and passive retrieval (RA
 
 An **Agent** is an autonomous system that uses a foundation model as a reasoning and routing engine to observe an environment, update an internal state, select and execute tools, and iterate until a predefined objective is achieved.
 
-```text
-                          [ User Request ]
-                                  │
-                                  ▼
-                    ┌───────────────────────────┐
-                    │   Graph State (Memory)    │
-                    │ (TypedDict / Pydantic DB) │
-                    └─────────────┬─────────────┘
-                                  │
-                                  ▼
-                         [ Supervisor Node ]
-                     (LLM Planning & Routing)
-                                  │
-                 /────────────────┴────────────────\
-                │ (Action Needed)                   │ (Task Complete)
-                ▼                                   ▼
-    [ Tool Execution Node ]                 [ Response Synthesizer ]
-    - Schema Validation (Pydantic)                  │
-    - Sandboxed Execution (SQL/API)                 ▼
-    - Output Sanitization                     [ Final Output ]
-                │
-                ▼
-    [ State Reducer / Update ]
-                │
-                ▼
-     /─────────────────────\
-    < Error / Need Retries? >
-     \─────────────────────/
-      │ (Yes)             │ (No)
-      ▼                   ▼
-[ Error Feedback ]   [ Evaluation / Gate ]
-      │                   │
-      └─────────┬─────────┘
-                │
-                ▼
-     (Loop back to Supervisor)
+```mermaid
+flowchart TD
+    User["User Request"] --> Planner["Supervisor / Planner Node<br/><i>Inspects State & Formulates Plan</i>"]
+    
+    Planner -->|Selects Tools| Tools["Deterministic Tool Node<br/>• Read-Replica SQL<br/>• Sandboxed Python Math<br/>• Semantic Vector Search"]
+    Tools --> Eval{"State Evaluator / Router"}
+    
+    Eval -->|Syntax Error / Missing Field| SelfCorrect["Self-Correction Loop<br/><i>Increment Retry Count</i>"]
+    SelfCorrect --> Planner
+    
+    Eval -->|High-Risk Financial Mutation| HITL["Human-in-the-Loop Gate<br/><i>INTERRUPT: Requires Human Authorization</i>"]
+    HITL -->|Approved| Planner
+    
+    Eval -->|Goal Satisfied| Final["Final Synthesizer<br/><i>Validated Response + Audit Provenance</i>"]
+    
+    subgraph Checkpointer ["State Checkpointing Engine"]
+        StateStore[("PostgreSQL Ledger<br/>Thread Checkpoints")]
+    end
+    StateStore <--> Planner
+    StateStore <--> Tools
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef gate fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fef3c7;
+    class HITL gate;
 ```
 
 ---

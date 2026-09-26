@@ -18,8 +18,13 @@ A mobile-first, chapter-based interactive course reader and playbook engineered 
    - Structured with the **30-60-30 Daily Deliberate Practice Protocol** (30 min paper/architecture deconstruction, 60 min line-by-line coding, 30 min documentation/benchmarking).
    - Milestone checklist with verifiable exit criteria for each sprint.
 
-3. **Production Math Rendering (KaTeX):**
-   - LaTeX equations (Scaled Dot-Product Attention, LoRA rank decomposition, RRF scoring, KV cache calculations) rendered crisply across mobile and desktop.
+3. **Production Math & Formula Cards (KaTeX):**
+   - LaTeX equations rendered inside dedicated, responsive `.formula-block` cards with horizontal scrolling and protection against Markdown character-corruption.
+   - Inline math equations styled as elegant semantic badges.
+
+4. **Interactive Architecture Flowcharts (Mermaid.js):**
+   - All ASCII architectural blocks upgraded to responsive, vector SVG flowcharts across all chapters.
+   - Dynamic dark/light mode synchronization and horizontal touch scrolling for mobile devices.
 
 4. **True Offline PWA Support (`sw.js` & `manifest.json`):**
    - Background service worker caching for offline access during commutes or flights.

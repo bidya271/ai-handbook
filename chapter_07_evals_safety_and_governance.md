@@ -9,39 +9,29 @@ You cannot maintain production reliability by testing with "vibes" or ad-hoc pro
 2. **Runtime Security & Guardrails:** Intercepting adversarial injections, system prompt leaks, and sensitive data exfiltration in real time.
 3. **Observability & Regulatory Governance:** Tracking semantic drift, token latency economics, and establishing audit trails compliant with frameworks like the **EU AI Act** and **NIST AI Risk Management Framework (AI RMF)**.
 
-```text
-                            [ Incoming User Payload ]
-                                        │
-                                        ▼
-                       ┌─────────────────────────────────┐
-                       │    Input Guardrail Gateway      │
-                       │ - Regex / PII Redaction         │
-                       │ - Injection Classifier Check    │
-                       │ - Delimiter Sandboxing          │
-                       └────────────────┬────────────────┘
-                                        │
-                                        ▼
-                       ┌─────────────────────────────────┐
-                       │   Orchestration & RAG Pipeline  │
-                       │ (Retriever -> Tools -> LLM Gen) │
-                       └────────────────┬────────────────┘
-                                        │
-                                        ▼
-                       ┌─────────────────────────────────┐
-                       │    Output Guardrail Gateway     │
-                       │ - Hallucination Filter          │
-                       │ - Schema & Policy Validator     │
-                       │ - Data Exfiltration Blocker     │
-                       └────────────────┬────────────────┘
-                                        │
-                                        ▼
-                       [ Production Telemetry Sink ]
-       ┌────────────────────────────────┼────────────────────────────────┐
-       ▼                                ▼                                ▼
-[ Trace Observability ]        [ Drift Detection Engine ]        [ Async Eval Suite ]
-- TTFT / ITL Latencies         - Query Embedding Drift (PSI)     - RAG Triad Scoring
-- Token Cost Attribution       - Output Distribution Shift       - LLM-as-a-Judge Audits
-- OpenTelemetry Spans                                            - Regression Dashboards
+```mermaid
+flowchart TD
+    Payload["Incoming User Payload"] --> Ingress["Input Guardrail Gateway<br/>• Regex & PII Redaction<br/>• Llama-Guard / ShieldGemma Classifier<br/>• Delimiter Sandboxing (&lt;UNTRUSTED_DATA&gt;)"]
+    
+    Ingress -->|Approved Safe| Pipeline["Orchestration & RAG Pipeline<br/>(Retriever ──► Tools ──► LLM Generation)"]
+    Ingress -->|Adversarial Threat| Reject["Request Rejected (HTTP 403 Safety Error)"]
+    
+    Pipeline --> Egress["Output Guardrail Gateway<br/>• NLI Groundedness Filter (≥ 0.95)<br/>• Schema & Policy Validator<br/>• Data Exfiltration Scanner (PCI-DSS/SSN)"]
+    
+    Egress -->|Verified Grounded| User["Clean Response to User"]
+    Egress -->|Hallucination Detected| Fallback["Purge Claim / Route to Human Review"]
+    
+    subgraph Observability ["Observability & Governance Subsystem"]
+        Spans["OpenTelemetry Spans<br/>(TTFT, ITL, Cost Attribution)"]
+        Drift["PSI Embedding Drift Monitor<br/>(Quantile Centroid Distances)"]
+        Audit["EU AI Act Compliance Trace<br/>(Article 12 & 14 Immutable Ledger)"]
+    end
+    
+    Pipeline -.-> Observability
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef danger fill:#881337,stroke:#f43f5e,stroke-width:2px,color:#ffe4e6;
+    class Reject,Fallback danger;
 ```
 
 ---
@@ -52,14 +42,16 @@ The primary metric of failure in enterprise generative AI is **hallucination**: 
 
 The industry standard evaluation framework for retrieval-augmented systems is the **RAG Triad**, which breaks system fidelity into three orthogonal, non-overlapping tests:
 
-```text
-                        [ User Query ]
-                        /            \
-       (Context Relevance)          (Answer Relevance)
-                      /                \
-                     ▼                  ▼
-            [ Retrieved Chunks ] ───► [ Generated Output ]
-                      (Groundedness / Faithfulness)
+```mermaid
+flowchart TD
+    UserQuery["User Query"]
+    UserQuery -->|Context Relevance| Chunks["Retrieved Chunks (C)"]
+    UserQuery -->|Answer Relevance| Output["Generated Output (S)"]
+    Chunks -->|Groundedness / Faithfulness| Output
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:2px,color:#f8fafc;
+    classDef query fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;
+    class UserQuery query;
 ```
 
 ### 7.2.1 Metric 1: Context Relevance (Precision of Retrieval)

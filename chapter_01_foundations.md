@@ -4,23 +4,19 @@
 
 This chapter establishes the computational substrate of modern language models. Before attention, context windows, or reasoning exist, neural networks operate purely on structured numeric multidimensional arrays (tensors). 
 
-```text
-[Raw String: "Unsettled transaction #4091"]
-│
-▼ (Pre-tokenization Regex & Normalization)
-["Un", "settled", " transaction", " #", "40", "91"]
-│
-▼ (Vocabulary Lookup Table: Tokenizer Model)
-[Token IDs: 3821, 19284, 8219, 849, 1420, 9128]
-│
-▼ (One-Hot Multiplier / Direct Matrix Indexing)
-[Embedding Weights Table Lookup: W_E ∈ ℝ^(|V| × d_model)]
-│
-▼ (Add/Apply Positional Embeddings: RoPE / Absolute)
-[Input Tensor: X_0 ∈ ℝ^(Batch_Size × Sequence_Length × d_model)]
-│
-▼
-[Ready for Self-Attention Layer 0]
+```mermaid
+flowchart TD
+    A["Raw Text String:<br/><b>'Unsettled transaction #4091'</b>"] -->|1. Pre-tokenization Regex & Normalization| B["Sub-word Fragments:<br/><code>['Un', 'settled', ' transaction', ' #', '40', '91']</code>"]
+    B -->|2. Vocabulary Lookup Table: Tokenizer Model| C["Discrete Token IDs:<br/><code>[3821, 19284, 8219, 849, 1420, 9128]</code>"]
+    C -->|3. O(1) Memory Offset Indexing into W_E| D["Embedding Lookup Matrix:<br/><b>W_E ∈ ℝ^(|V| × d_model)</b>"]
+    D -->|4. Coordinate Rotation: RoPE or Absolute PE| E["Input Tensor:<br/><b>X_0 ∈ ℝ^(Batch × Sequence × d_model)</b>"]
+    E --> F["🚀 Ready for Self-Attention Layer 0"]
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef start fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;
+    classDef endNode fill:#065f46,stroke:#10b981,stroke-width:2px,color:#ffffff;
+    class A start;
+    class F endNode;
 ```
 
 Every concept in this module is cross-referenced with relational data engineering and linear algebra primitives.

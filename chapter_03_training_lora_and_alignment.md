@@ -6,28 +6,22 @@ In Chapters 1 and 2, we examined how tokens are mapped to high-dimensional laten
 
 This chapter deconstructs how neural weights are updated, why full fine-tuning crashes production infrastructure, how **Low-Rank Adaptation (LoRA/QLoRA)** solves the memory wall, and how models are aligned with human intent via **DPO** and **RLHF**.
 
-```text
-               [ Foundation Model Weights (W_0) ]
-               (Pre-trained on Trillions of Tokens)
-                                │
-   ┌────────────────────────────┴────────────────────────────┐
-   ▼                                                         ▼
-[ Full Parameter Fine-Tuning ]                            [ PEFT / LoRA ]
-* Updates 100% of parameters                              - Freezes W_0 completely
-* Requires 16–20 bytes/param VRAM                         - Injects low-rank adapters (B × A)
-* High risk of Catastrophic Forgetting                    - Requires < 20% VRAM of full tuning
-   │                                                         │
-   └────────────────────────────┬────────────────────────────┘
-                                ▼
-                 [ Supervised Fine-Tuning (SFT) ]
-                 (Format enforcement, JSON schema, Task data)
-                                │
-                                ▼
-                 [ Preference Alignment Layer ]
-                 ┌──────────────┴──────────────┐
-                 ▼                             ▼
-           [ RLHF + PPO ]                     [ DPO ]
-     (Separate Reward Model)      (Direct Implicit Optimization)
+```mermaid
+flowchart TD
+    W0["Foundation Model Weights (W_0)<br/><i>Pre-trained on Trillions of Tokens</i>"]
+    
+    W0 -->|Heavy Compute Cluster| Full["Full Parameter Fine-Tuning<br/>• Updates 100% of parameters<br/>• 16-20 Bytes/parameter VRAM<br/>• Catastrophic forgetting risk"]
+    W0 -->|Resource Efficient| LoRA["PEFT / LoRA Adaptation<br/>• Freezes W_0 completely<br/>• Injects low-rank adapters (B × A)<br/>• < 20% VRAM of full tuning"]
+    
+    Full & LoRA --> SFT["Supervised Fine-Tuning (SFT)<br/><i>Task schema, instruction following, JSON format</i>"]
+    
+    SFT --> Pref["Preference Alignment Layer"]
+    Pref --> RLHF["RLHF + PPO<br/><i>Explicit Reward Model</i>"]
+    Pref --> DPO["Direct Preference Optimization (DPO)<br/><i>Closed-form implicit optimization</i>"]
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef base fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#ffffff;
+    class W0,Pref base;
 ```
 
 ---

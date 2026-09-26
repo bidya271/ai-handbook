@@ -6,35 +6,26 @@ In Chapters 1 through 5, we explored how models are constructed, adapted, augmen
 
 Production AI infrastructure is governed by hardware utilization economics: maximizing throughput (tokens generated per second per dollar of compute) while strictly adhering to Service Level Agreements (SLAs) for latency.
 
-```text
-                              [ Incoming Client Requests ]
-                                            │
-                                            ▼
-                      [ High-Performance Inference Gateway ]
-                         (Routing, Rate Limiting, API Auth)
-                                            │
-                                            ▼
-                    ┌───────────────────────────────────────────────┐
-                    │      vLLM / TensorRT-LLM Serving Runtime      │
-                    │                                               │
-                    │   ┌───────────────────────────────────────┐   │
-                    │   │   Iteration-Level Continuous Batcher  │   │
-                    │   │   (Dynamic Request Insertion/Eviction)│   │
-                    │   └───────────────────┬───────────────────┘   │
-                    │                       │                       │
-                    │   ┌───────────────────▼───────────────────┐   │
-                    │   │         PagedAttention Engine         │   │
-                    │   │  (Virtual Memory KV-Cache Page Table) │   │
-                    │   └───────────────────┬───────────────────┘   │
-                    └───────────────────────┼───────────────────────┘
-                                            │
-                                            ▼
-                                [ GPU Hardware Cluster ]
-                 ┌──────────────────────────┴──────────────────────────┐
-                 ▼                                                     ▼
-       [ Tensor Core SRAM ]                                   [ 80GB HBM3 VRAM ]
-  (High-intensity Matrix Math)                            (Model Weights & KV Pages)
-  - Prefill Phase: Compute-Bound                          - Decode Phase: Bandwidth-Bound
+```mermaid
+flowchart TD
+    Clients["Concurrent Client Requests"] --> Gateway["High-Performance API Gateway<br/>• Rate Limiting & Auth<br/>• Prompt Caching Lookups"]
+    
+    subgraph ServingEngine ["vLLM / TensorRT-LLM Serving Runtime"]
+        Gateway --> Batcher["Iteration-Level Continuous Batcher<br/><i>Dynamically injects/evicts requests at token forward step</i>"]
+        Batcher --> Paged["PagedAttention Virtual Memory Engine<br/><i>Logical-to-Physical KV Block Translation Table</i>"]
+        Paged --> Kernels["FlashAttention-3 GPU Kernels"]
+    end
+    
+    subgraph GPUVRAM ["GPU High Bandwidth Memory (HBM)"]
+        Kernels --> Weights[("Static Model Weights (AWQ / FP8)")]
+        Kernels --> KVCache[("Non-Contiguous KV-Cache Pages (<4% waste)")]
+    end
+    
+    Kernels --> StreamOut["Low-Latency Token Streaming (SSE)"]
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef storage fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#e0f2fe;
+    class Weights,KVCache storage;
 ```
 
 ---

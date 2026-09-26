@@ -6,76 +6,42 @@ This capstone module synthesizes all seven preceding layers into a unified, prod
 
 The system processes unstructured SEC regulatory filings, corporate quarterly reports (10-Q/10-K), and transaction dispute logs, identifies non-compliant transactions or reporting variances, checks them against regulatory policies, and compiles human-audited remediation briefs.
 
-```text
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                INGESTION & ETL LAYER                                  │
-│  [ Unstructured 10-K / PDFs ] ──► [ Unstructured.io / PyMuPDF Table Extraction ]       │
-│                                           │                                            │
-│                                           ▼                                            │
-│                            [ Semantic Window Chunking ]                                │
-│                                           │                                            │
-│                     ┌─────────────────────┴─────────────────────┐                      │
-│                     ▼                                           ▼                      │
-│         [ BGE-M3 Dense Embedding ]                    [ BM25 Tokenizer ]               │
-│                     │                                           │                      │
-│                     ▼                                           ▼                      │
-│        [ pgvector: HNSW Index ]                    [ pg_search: Inverted Index ]       │
-└─────────────────────┬───────────────────────────────────────────┬──────────────────────┘
-                      │                                           │
-                      └─────────────────────┬─────────────────────┘
-                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                              RETRIEVAL & RERANKING CLUSTER                            │
-│                                           │                                            │
-│                     ┌─────────────────────┴─────────────────────┐                      │
-│                     ▼                                           ▼                      │
-│             Top-40 Dense Vectors                       Top-40 Sparse Records           │
-│                     │                                           │                      │
-│                     └─────────────────────┬─────────────────────┘                      │
-│                                           ▼                                            │
-│                       [ Reciprocal Rank Fusion (RRF k=60) ]                            │
-│                                           │                                            │
-│                                           ▼                                            │
-│                             Top-25 Fused Candidates                                    │
-│                                           │                                            │
-│                                           ▼                                            │
-│                         [ Cross-Encoder Reranker (BGE-v2) ]                            │
-│                                           │                                            │
-│                                           ▼                                            │
-│                               Top-5 Grounded Chunks                                    │
-└───────────────────────────────────────────┬────────────────────────────────────────────┘
-                                            │
-                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                            STATEFUL AGENT EXECUTION GRAPH                              │
-│                                                                                        │
-│               ┌───────────────────────────────────────────────────────┐                │
-│               │             State Store (PostgreSQL Engine)           │                │
-│               └───────────────────────────┬───────────────────────────┘                │
-│                                           │                                            │
-│                                           ▼                                            │
-│    ┌──────────────┐             ┌───────────────────┐             ┌────────────────┐   │
-│    │ Planner Node │ ──────────► │ Tool Executor Node│ ──────────► │ Evaluator Node │   │
-│    └──────────────┘             └───────────────────┘             └────────────────┘   │
-│           ▲                               │ (Dynamic Feedback)            │            │
-│           │                               ▼                               ▼            │
-│           └──────────────────── (Loop on Failure/Variance)         (Groundedness >=0.95)
-│                                                                           │            │
-│                                                                           ▼            │
-│                                                                  [ Interrupt / HITL ]  │
-│                                                                  (Human Authorization) │
-└───────────────────────────────────────────────────────────────────────────┬────────────┘
-                                                                            │
-                                                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                           GOVERNANCE & TELEMETRY SUBSYSTEM                             │
-│                                                                                        │
-│       ┌───────────────────────┬─────────────────────────┬───────────────────────┐      │
-│       ▼                       ▼                         ▼                       ▼      │
-│  [ OpenTelemetry ]      [ Langfuse Logs ]         [ PSI Drift Engine ]     [ Audit Report ]
-│  - TTFT / ITL           - Token Costs             - Vector Shift > 0.15    - EU AI Act Art.14
-│  - Latency Spans        - Run Attribution         - Retrain Alert          - Immutable Trace
-└────────────────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph IngestionSubsystem ["1. Ingestion & Storage Substrate"]
+        SEC["Unstructured 10-K / 10-Q Filings"] --> Extract["Table & Text Extraction (PyMuPDF)"]
+        Extract --> Chunk["Semantic Window Chunking"]
+        Chunk --> BGE["BGE-M3 Dense (1024-dim)"]
+        Chunk --> BM25["BM25 Lexical Tokenizer"]
+        BGE --> HNSW[("pgvector: HNSW Index")]
+        BM25 --> GIN[("PostgreSQL: GIN Full-Text")]
+    end
+
+    subgraph RetrievalSubsystem ["2. Retrieval & Reranking Cluster"]
+        Query["Audit Query"] --> HNSW & GIN
+        HNSW -->|Top-40 Dense| RRF["Reciprocal Rank Fusion (k=60)"]
+        GIN -->|Top-40 Sparse| RRF
+        RRF -->|Top-25 Fused| CE["Cross-Encoder Reranker"]
+        CE -->|Top-5 High-Signal| Agent
+    end
+
+    subgraph AgentSubsystem ["3. Stateful LangGraph Execution Graph"]
+        Agent["Planner Node"] --> Tools["Tool Executor Node<br/><i>execute_deterministic_variance_check</i>"]
+        Tools --> Eval["Evaluator Node<br/><i>NLI Groundedness ≥ 0.95</i>"]
+        Eval -->|Variance Delta Detected| HITL["Human-in-the-Loop Gate<br/><i>Compliance Officer Authorization</i>"]
+        Eval -->|Groundedness < 0.95| Agent
+        Checkpoints[("agent_checkpoints<br/>PostgreSQL Ledger")] <--> Agent
+    end
+
+    subgraph GovernanceSubsystem ["4. Governance & Telemetry Subsystem"]
+        HITL --> Brief["Remediation Brief & Report"]
+        Brief --> OTel["OpenTelemetry + Langfuse Spans"]
+        Brief --> PSI["PSI Semantic Drift Monitor"]
+    end
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef gate fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fef3c7;
+    class HITL gate;
 ```
 
 ---

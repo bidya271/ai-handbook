@@ -9,36 +9,31 @@ In Chapters 1–3, we analyzed how models learn and adapt parametric representat
 
 **Retrieval-Augmented Generation (RAG)** separates storage from reasoning. The model acts as a reasoning engine, while an external retrieval system dynamically supplies verified reference context at query time.
 
-```text
-                         [ Raw User Query ]
-                                 │
-       ┌─────────────────────────┴─────────────────────────┐
-       ▼                                                   ▼
-[ Dense Vector Query ]                             [ Sparse Keyword Query ]
-(Embedding Model: e.g., BGE)                       (BM25 Tokenized Terms)
-       │                                                   │
-       ▼                                                   ▼
-[ Vector Database (HNSW / IVF) ]                     [ Inverted Index (Lucene) ]
-Returns Top-50 Candidates                           Returns Top-50 Candidates
-       │                                                   │
-       └─────────────────────────┬─────────────────────────┘
-                                 ▼
-                   [ Reciprocal Rank Fusion (RRF) ]
-                     (Scale-agnostic Rank Merge)
-                                 │
-                                 ▼
-                    Top-30 Fused Candidate Pool
-                                 │
-                                 ▼
-                     [ Cross-Encoder Reranker ]
-               (Full Query-Document Cross-Attention)
-                                 │
-                                 ▼
-                    Top-5 Hyper-Grounded Chunks
-                                 │
-                                 ▼
-                   [ Augmented Generator Context ]
-               (Prompt Assembly -> Final LLM Inference)
+```mermaid
+flowchart TD
+    User["Raw User Query"] --> Ingest
+
+    subgraph Ingest ["1. Ingestion & Chunking ETL"]
+        Doc["Raw Documents (PDF, MD, HTML)"] --> Chunk["Semantic Window Chunking<br/>(Structural headers + 15% overlap)"]
+    end
+
+    subgraph Indexing ["2. Dual-Engine Indexing"]
+        Chunk --> Dense["Dense Vector Embedder (BGE-M3)<br/>dim = 1024"]
+        Chunk --> Sparse["BM25 Lexical Tokenizer<br/>Stemming & Frequency Map"]
+        Dense --> HNSW[("pgvector: HNSW Graph<br/>Cosine Distance")]
+        Sparse --> GIN[("PostgreSQL: GIN Index<br/>Full-Text Search")]
+    end
+
+    subgraph Retrieve ["3. Hybrid Retrieval & Reranking"]
+        HNSW -->|Top-40 Dense| RRF["Reciprocal Rank Fusion (RRF k=60)"]
+        GIN -->|Top-40 Sparse| RRF
+        RRF -->|Top-25 Candidates| CE["Cross-Encoder Reranker (BGE-Reranker-v2)<br/>Full Cross-Attention over Query+Doc"]
+        CE -->|Top-5 High-Signal Chunks| Prompt["LLM Generator Prompt Context"]
+    end
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef storage fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#e0f2fe;
+    class HNSW,GIN storage;
 ```
 
 ---

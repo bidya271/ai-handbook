@@ -6,35 +6,27 @@ In Chapter 1, we established how raw text is converted into a structured input t
 
 However, static embeddings cannot resolve context or polysemy (e.g., distinguishing between a "financial bank" vs. a "river bank"). The **Self-Attention Mechanism** is the dynamic routing engine that allows every token in a sequence to update its vector representation by pulling information from all other tokens in the context window.
 
-```text
-                Input Tensor X ∈ ℝ^(B × S × d_model)
-                                │
-       ┌────────────────────────┼────────────────────────┐
-       ▼                        ▼                        ▼
-Projection W_Q           Projection W_K           Projection W_V
-       │                        │                        │
-       ▼                        ▼                        ▼
-  Query (Q)                  Key (K)                 Value (V)
-       │                        │                        │
-       └───────────┬────────────┘                        │
-                   ▼                                     │
-       Scaled Dot-Product (Q K^T / √d_k)                 │
-                   │                                     │
-                   ▼                                     │
-        Causal Masking (Optional)                        │
-                   │                                     │
-                   ▼                                     │
-         Softmax Normalization                           │
-                   │                                     │
-                   └──────────────┬──────────────────────┘
-                                  ▼
-                       Weighted Values Output
-                                  │
-                                  ▼
-                    Output Projection (W_O)
-                                  │
-                                  ▼
-                 Residual Stream Connection (X + Out)
+```mermaid
+flowchart TD
+    X["Input Tensor: X ∈ ℝ^(B × S × d_model)"]
+    X --> WQ["Projection W_Q"]
+    X --> WK["Projection W_K"]
+    X --> WV["Projection W_V"]
+    
+    WQ --> Q["Query Matrix (Q)<br/><i>What tokens seek</i>"]
+    WK --> K["Key Matrix (K)<br/><i>What tokens advertise</i>"]
+    WV --> V["Value Matrix (V)<br/><i>Payload delivered</i>"]
+    
+    Q & K --> SD["Scaled Dot-Product:<br/><b>(Q K^T) / √d_k</b>"]
+    SD --> CM["Causal Masking (-∞ Future Positions)"]
+    CM --> SM["Softmax Row-wise Normalization (Σ = 1.0)"]
+    SM & V --> WVOut["Weighted Value Aggregation: <b>P × V</b>"]
+    WVOut --> WO["Output Projection Matrix: <b>W_O</b>"]
+    WO --> Res["Residual Stream Connection:<br/><b>X + Attention_Output</b>"]
+
+    classDef default fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#f8fafc;
+    classDef tensor fill:#312e81,stroke:#a5b4fc,stroke-width:2px,color:#ffffff;
+    class X,Res tensor;
 ```
 
 ---
