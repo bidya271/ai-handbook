@@ -43,6 +43,7 @@ ai-handbook/
 ├── chapter_03_training_lora_and_alignment.md      # Standalone deep dive on Loss, AdamW, LoRA/QLoRA & DPO
 ├── chapter_04_production_rag_and_retrieval.md     # Standalone deep dive on Chunking, HNSW/IVF, BM25 & Rerankers
 ├── chapter_05_agentic_systems_and_orchestration.md# Standalone deep dive on State Graphs, Tools, Memory & HITL
+├── chapter_06_serving_and_inference_infrastructure.md # Standalone deep dive on vLLM, PagedAttention, Quantization & Latency
 ├── index.html                                    # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
 ├── manifest.json                                 # Progressive Web App (PWA) manifest configuration
 ├── package.json                                  # Project definition and static serve scripts
@@ -93,7 +94,7 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 - **Chapter 3:** Adaptation & Optimization: Cross-Entropy Loss, AdamW, LoRA, QLoRA (NF4) & DPO Alignment
 - **Chapter 4:** Production RAG & Hybrid Retrieval: Semantic Window Chunking, HNSW/IVF Graphs, BM25 & Cross-Encoder Rerankers
 - **Chapter 5:** Stateful Agentic Systems & Orchestration: Cyclic State Graphs, Pydantic Tool Schemas, Memory Architecture & HITL
-- **Chapter 6:** Inference Optimization & Serving at Scale
+- **Chapter 6:** Serving Engines & High-Throughput Infrastructure: vLLM, PagedAttention, Continuous Batching, AWQ/FP8 & Latency SLAs (with Interactive Roofline Sizing Simulator)
 - **Chapter 7:** Production Evals & Guardrails
 - **Chapter 8:** End-to-End Production Capstone Blueprint (*Autonomous Financial Ledger Auditor*)
 - **Chapter 9:** The Accelerated Fast-Track Roadmap (*Compress 9 Months into 60 Days*)
