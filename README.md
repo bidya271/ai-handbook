@@ -52,6 +52,7 @@ ai-handbook/
 ├── chapter_07_evals_safety_and_governance.md     # Standalone deep dive on RAG Triad, LLM-as-a-Judge & EU AI Act
 ├── chapter_08_capstone_financial_auditor.md      # Standalone deep dive on Autonomous Auditor, pgvector, LangGraph & HITL
 ├── chapter_09_accelerated_roadmap_and_sprint.md  # Standalone deep dive on 60-Day Sprint, 30-60-30 Protocol & Gate Milestones
+├── chapter_10_portfolio_and_postmortem_playbook.md # Standalone deep dive on Proof-of-Work, 4 Artifacts, RCAs & Whiteboards
 ├── index.html                                    # Full mobile-first reader with KaTeX, Lucide, and 10 course chapters
 ├── manifest.json                                 # Progressive Web App (PWA) manifest configuration
 ├── package.json                                  # Project definition and static serve scripts
@@ -106,7 +107,7 @@ Open `http://localhost:3000` in your mobile simulator or browser.
 - **Chapter 7:** Production Evals, Safety & Enterprise Governance: The RAG Triad, LLM-as-a-Judge, Dual Guardrails & EU AI Act (with Interactive NLI Proposition Auditor)
 - **Chapter 8:** Capstone Architecture: Autonomous Financial Risk & Compliance Auditor (with Interactive End-to-End Audit Workbench & HITL Simulator)
 - **Chapter 9:** The Accelerated Fast-Track Roadmap: The 30-60-30 Protocol, 4 Gate Milestones & 60-Day Sprint (with Interactive Deliberate Practice Calculator)
-- **Chapter 10:** The "Build in Public" Portfolio & Technical Post-Mortem Playbook
+- **Chapter 10:** The "Build in Public" Portfolio & Technical Post-Mortem Playbook: 4 Tier-1 Artifacts, Root Cause Analysis & Staff Whiteboard Defense (with Interactive Portfolio Readiness Scorecard)
 
 ---
 
